@@ -296,6 +296,7 @@ body.night .perban{background:#4A2A3A!important}body.night .pring{background:#4A
 .hlp{display:block!important}.hlp summary{display:flex;align-items:center;gap:12px;cursor:pointer}.hlp summary b{flex:1}
 .hlp[open] summary .ma{transform:rotate(180deg)}.hlp .steps{margin:12px 0 10px}.hlp .steps li{line-height:1.8}
 .hlp .steps b{color:var(--ink)}.tipcard{background:var(--ink-soft)!important}
+.instban{align-items:center;flex-wrap:nowrap;gap:10px;border:1.5px solid var(--ink)!important;background:var(--ink-soft)!important}.instban .grow{flex:1;min-width:0}.instban .primary{min-height:40px;padding:0 16px}
 .quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .quick button{border:0;background:var(--bg);border-radius:16px;padding:16px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:600;font-size:.9rem}
 .quick button span{width:48px;height:48px;border-radius:14px;background:var(--ink-soft);display:grid;place-items:center;font-size:1.35rem}
@@ -325,6 +326,7 @@ input[type=number]{-moz-appearance:textfield}
 <!-- ================= الرئيسية ================= -->
 <section class="view" id="v-home">
   <header class="hero homehero"><div><div class="greet" id="hGreet"></div><h1 id="hDate"></h1><div class="sub" id="hHijri"></div></div><div class="nav"><button class="namebtn" id="nameBtn" data-open="sh-name" hidden>✎ اكتب اسمك</button></div></header>
+  <div class="card instban" id="instBan" hidden><span class="mi">📲</span><div class="grow"><b>ثبّت رفيق على شاشتك</b><div class="sub" id="instBanTxt">يفتح زي التطبيق بضغطة، ويشتغل من غير نت</div></div><button class="primary" id="instGo" type="button">ثبّت</button><button class="del" id="instX" type="button" aria-label="إخفاء">×</button></div>
   <div id="homePrayer"></div>
   <div class="report" id="report"></div>
   <div class="alert" id="dueBox" hidden></div>
@@ -1718,6 +1720,13 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredIns
 (function(){const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
   const ios=/iphone|ipad|ipod/i.test(navigator.userAgent),row=document.getElementById('installRow');
   if(standalone){row.hidden=true;return}
+  const ban=document.getElementById('instBan');let x=false;try{x=localStorage.getItem('rafiq-inst-x')==='1'}catch(e){}
+  if(!x)ban.hidden=false;
+  document.getElementById('instX').onclick=()=>{ban.hidden=true;try{localStorage.setItem('rafiq-inst-x','1')}catch(e){}};
+  document.getElementById('instGo').onclick=async()=>{
+    if(deferredInstall){deferredInstall.prompt();try{const c=await deferredInstall.userChoice;if(c&&c.outcome==='accepted')ban.hidden=true}catch(e){}deferredInstall=null;return}
+    document.getElementById('instBanTxt').innerHTML=ios?'في <b>سفاري</b>: اضغط زرار المشاركة <b>⬆️</b> تحت، وبعدين <b>"إضافة إلى الشاشة الرئيسية"</b>':'في <b>كروم</b>: اضغط <b>⋮</b> فوق، وبعدين <b>"تثبيت التطبيق"</b> أو <b>"إضافة إلى الشاشة الرئيسية"</b>'};
+  window.addEventListener('appinstalled',()=>{ban.hidden=true;document.getElementById('installRow').hidden=true});
   document.getElementById('installBtn').onclick=async()=>{
     if(deferredInstall){deferredInstall.prompt();try{await deferredInstall.userChoice}catch(e){}deferredInstall=null;return}
     document.getElementById('installTxt').textContent=ios?'اضغط زرار المشاركة تحت في سفاري ⬆️ وبعدين "إضافة إلى الشاشة الرئيسية"':'افتح قائمة المتصفح (⋮) واختار "إضافة إلى الشاشة الرئيسية" أو "تثبيت التطبيق"'}})();
