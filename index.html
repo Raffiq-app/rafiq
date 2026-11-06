@@ -1,0 +1,1727 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#5160E0">
+<meta name="description" content="رفيق: مواقيت الصلاة والأذكار، مهام وتذكيرات، مصاريف وأقساط، وفضفضة مقفولة. مجاني صدقة جارية.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="رفيق">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>رفيق</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Amiri:wght@400;700&family=Amiri+Quran&display=swap">
+<style>
+/* Layout: one-column phone planner — bright gradient day card, summary strip, forms, lists; home dashboard + section list; sections open with back/sections buttons; no tab bar.
+   Deliberately light by default whatever the phone theme; optional soft night mode via body.night */
+:root{
+  --bg:#F5F6FB; --surface:#FFFFFF; --fg:#1E2440; --muted:#6E7594; --line:#E3E6F2;
+  --ink:#5160E0; --ink-2:#8A5CF0; --ink-soft:#ECEEFF; --amber:#C77A00; --amber-soft:#FFF2D9; --danger:#DC4B3B; --danger-soft:#FDE9E6;
+  --shadow:0 2px 10px rgba(60,70,140,.07);
+  --display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+body.night{
+  --bg:#232A3D; --surface:#2D3550; --fg:#EEF0FA; --muted:#A9B0CC; --line:#3D4664;
+  --ink:#8E9BFF; --ink-2:#B392FF; --ink-soft:#3A4370; --amber:#FFC15A; --amber-soft:#4A4030; --danger:#FF8A7A; --danger-soft:#4D3338;
+  --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box}
+ul.list,.card,.stat,.empty,form.add input,.seg,#habArea>div{box-shadow:var(--shadow)}
+ul.list,.card,.stat,.seg{border-color:transparent!important}
+.empty{border-color:var(--line)}
+.hero{background:linear-gradient(135deg,var(--ink),var(--ink-2));color:#fff;border-radius:22px;padding:20px 18px;align-items:center}
+.hero .sub{color:rgba(255,255,255,.85)}
+.hero .iconbtn{background:rgba(255,255,255,.18);border-color:transparent;color:#fff}
+.hero .soft{background:#fff;color:var(--ink)}
+li.done .check{background:#2FA36B!important;border-color:#2FA36B!important}
+.dot.on{background:var(--ink)}
+nav.tabs{box-shadow:0 -4px 16px rgba(60,70,140,.08);border-top-color:transparent!important}
+nav.tabs button[aria-selected="true"] b{background:var(--ink-soft);border-radius:10px;padding:3px 14px}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;direction:rtl}
+.wrap{max-width:620px;margin:0 auto;padding-block:18px 110px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.view{display:flex;flex-direction:column;gap:16px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+h1{font-family:var(--display);font-weight:700;font-size:1.75rem;margin:0;line-height:1.2;text-wrap:balance}
+.sub{color:var(--muted);font-size:.85rem}
+.nav{display:flex;gap:6px;flex:none}
+button{font:inherit;color:inherit;cursor:pointer}
+.iconbtn{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:1.1rem;display:grid;place-items:center}
+.iconbtn:disabled{opacity:.35;cursor:default}
+.soft{border:0;background:var(--ink-soft);color:var(--ink);border-radius:10px;padding:0 12px;min-height:38px;font-weight:600;font-size:.85rem}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+.strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 10px;text-align:start;min-width:0}
+.stat small{display:block;color:var(--muted);font-size:.72rem}
+.stat b{font-family:var(--display);font-size:1.1rem;font-variant-numeric:tabular-nums}
+.bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ink);transition:width .3s}
+
+.alert{background:var(--amber-soft);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.alert h3{margin:0;font-family:var(--display);font-size:.95rem;color:var(--amber)}
+.alert .row{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.alert .row span{min-width:0}
+.mini{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:3px 10px;font-size:.8rem;white-space:nowrap}
+a.mini{text-decoration:none;color:var(--ink);display:inline-block}
+
+form.add,.card{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px}
+input[type=text],input[type=password],input[type=number],input[type=date],input[type=datetime-local],textarea,select{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:12px;padding:10px 12px;min-width:0}
+.grow{flex:1 1 200px}
+textarea{width:100%;min-height:80px;resize:vertical}
+.primary{border:0;background:var(--ink);color:var(--bg);border-radius:12px;padding:0 18px;min-height:46px;font-weight:600}
+.chips{display:flex;gap:6px;flex-wrap:wrap;align-items:center;flex-basis:100%}
+.chips .lbl{font-size:.75rem;color:var(--muted);margin-inline-end:2px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;font-size:.82rem}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:transparent;border-radius:9px;padding:7px 4px;font-size:.88rem;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink-soft);color:var(--ink);font-weight:600}
+
+.sec{font-size:.78rem;letter-spacing:.03em;color:var(--muted);font-weight:600;margin:6px 2px -8px;display:flex;justify-content:space-between}
+ul.list{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+ul.list li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-top:1px solid var(--line)}
+ul.list li:first-child{border-top:0}
+.check{flex:none;width:24px;height:24px;border-radius:7px;border:2px solid var(--muted);background:transparent;display:grid;place-items:center;margin-top:2px;color:var(--bg);font-size:.85rem;padding:0}
+li.done .check{background:var(--ink);border-color:var(--ink)}
+.txt{flex:1;min-width:0;overflow-wrap:anywhere}
+li.done .txt .t{text-decoration:line-through;color:var(--muted)}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px;align-items:center}
+.tag{font-size:.72rem;border-radius:6px;padding:1px 7px;background:var(--ink-soft);color:var(--ink)}
+.tag.carry,.tag.r{background:var(--amber-soft);color:var(--amber)}
+.tag.u{background:var(--danger-soft);color:var(--danger)}
+.tag.plain{background:transparent;border:1px solid var(--line);color:var(--muted)}
+li.pu{box-shadow:inset -3px 0 0 var(--danger)}
+.del,.tiny{border:0;background:transparent;color:var(--muted);font-size:1.05rem;padding:0 4px;opacity:.6}
+.del:hover{opacity:1;color:var(--danger)}
+.tiny{font-size:.78rem;opacity:.85;white-space:nowrap}
+.empty{color:var(--muted);text-align:center;padding:24px 10px;font-size:.92rem;background:var(--surface);border:1px dashed var(--line);border-radius:14px}
+.note{white-space:pre-wrap}
+.when{font-variant-numeric:tabular-nums;font-size:.78rem;color:var(--muted)}
+.when.due{color:var(--amber);font-weight:600}
+.pin{border:0;background:transparent;font-size:1rem;opacity:.35;padding:0 4px}
+.pin.on{opacity:1}
+details summary{cursor:pointer;list-style:none}
+details summary::-webkit-details-marker{display:none}
+
+/* habits */
+.hab{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-top:1px solid var(--line)}
+.hab:first-child{border-top:0}
+.hab .top{display:flex;align-items:center;gap:10px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dot{border:1px solid var(--line);background:transparent;border-radius:8px;height:30px;font-size:.68rem;color:var(--muted);padding:0;font-variant-numeric:tabular-nums}
+.dot.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.dot.today{outline:1.5px solid var(--ink);outline-offset:1px}
+.ring{width:84px;height:84px;flex:none}
+.big{font-family:var(--display);font-size:2rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+
+/* money */
+.money{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.catrow{display:grid;grid-template-columns:88px 1fr auto;gap:10px;align-items:center;font-size:.85rem}
+.catrow .bar{height:10px}
+.parsed{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;border-top:1px solid var(--line);padding-top:8px;width:100%}
+.parsed .fields{display:flex;gap:6px;flex-wrap:wrap}
+.parsed input,.parsed select{padding:6px 8px;font-size:.85rem;border-radius:9px}
+.hint{font-size:.78rem;color:var(--muted);flex-basis:100%}
+
+nav.tabs{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);z-index:5}
+nav.tabs button{flex:1;max-width:140px;border:0;background:transparent;padding:9px 2px 11px;font-size:.76rem;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;position:relative}
+nav.tabs button b{font-size:1.2rem;line-height:1}
+nav.tabs button[aria-selected="true"]{color:var(--ink);font-weight:600}
+.badge{position:absolute;top:5px;inset-inline-start:calc(50% + 6px);background:var(--amber);color:var(--bg);border-radius:999px;font-size:.66rem;min-width:17px;padding:0 4px;line-height:17px;font-variant-numeric:tabular-nums}
+.toast{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:8px 16px;border-radius:10px;font-size:.85rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:6;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+
+/* bottom sheets + floating add button */
+.sheet-bg{position:fixed;inset:0;background:rgba(20,24,50,.38);z-index:20}
+.sheet{position:fixed;left:0;right:0;bottom:0;margin:0 auto;max-width:620px;z-index:21;background:var(--surface);border-radius:24px 24px 0 0;
+  padding-block:10px calc(20px + env(safe-area-inset-bottom,0px));padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px));
+  max-height:90vh;overflow-y:auto;box-shadow:0 -10px 30px rgba(20,24,60,.18);animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(30px);opacity:.4}to{transform:none;opacity:1}}
+.grab{width:42px;height:5px;border-radius:5px;background:var(--line);margin:0 auto 8px}
+.sh-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.sh-head h2{font-family:var(--display);font-size:1.25rem;margin:0}
+.sheet form,.sheet .form{display:flex;flex-direction:column;gap:16px}
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.field>label{font-size:.82rem;color:var(--muted);font-weight:600}
+.field input,.field select,.field textarea{width:100%;padding:12px 14px;background:var(--bg);border-color:var(--line)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--ink);outline:none;background:var(--surface)}
+.bigin{font-size:1.6rem!important;font-family:var(--display);font-weight:700;text-align:center}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sheet .chips{flex-basis:auto}
+.sheet .chip{padding:8px 15px;font-size:.9rem;background:var(--bg)}
+.sheet .chip[aria-pressed="true"]{background:var(--ink)}
+.sheet .primary{width:100%;min-height:52px;font-size:1rem}
+.sheet .hint{text-align:center}
+.fab{position:fixed;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:6;border:0;border-radius:18px;
+  background:linear-gradient(135deg,var(--ink),var(--ink-2));color:#fff;height:54px;padding:0 20px 0 22px;font-weight:600;font-size:.95rem;
+  display:flex;align-items:center;gap:8px;box-shadow:0 8px 20px rgba(81,96,224,.38)}
+.fab b{font-size:1.5rem;line-height:1;font-weight:500}
+.smsbtn{display:flex;align-items:center;gap:12px;width:100%;text-align:start;border:1.5px dashed var(--ink);background:var(--ink-soft);color:var(--fg);border-radius:14px;padding:12px 14px}
+.smsbtn span:first-child{font-size:1.4rem}.smsbtn span:nth-child(2){flex:1;display:flex;flex-direction:column}
+.smsbtn small{color:var(--muted);font-size:.78rem}.smsbtn span:last-child{color:var(--ink);font-weight:700}
+.parsed{background:var(--bg);border:0;border-radius:12px;padding:10px}
+.wrap{padding-bottom:110px!important}
+.hnav{display:flex;justify-content:space-between;gap:8px;margin-bottom:-4px}
+.hnav .soft{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.homehero h1{font-size:1.5rem}
+.report{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rtile{background:var(--surface);border:0;border-radius:16px;padding:12px 14px;text-align:start;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:4px;min-width:0}
+.rtile small{color:var(--muted);font-size:.76rem}
+.rtile b{font-family:var(--display);font-size:1.35rem;font-variant-numeric:tabular-nums;line-height:1.2;overflow-wrap:anywhere}
+.rtile b span{font-size:.75rem;color:var(--muted);font-family:var(--body);font-weight:500}
+.rtile em{font-style:normal;font-size:.75rem;color:var(--muted)}
+.rtile em.bad{color:var(--danger)}.rtile em.warn{color:var(--amber)}
+.blk{flex-direction:column;align-items:stretch;gap:4px}
+.blkhead{display:flex;justify-content:space-between;align-items:center}
+.htask{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.htask:first-child{border-top:0}
+.htask.done .t{text-decoration:line-through;color:var(--muted)}
+.htask.done .check{background:#2FA36B;border-color:#2FA36B}
+.menu button .mt small.warn{color:var(--amber);font-weight:600}
+.homelink{display:flex;align-items:center;gap:12px;width:100%;border:0;background:var(--ink-soft);color:var(--ink);border-radius:14px;padding:10px 14px;margin-bottom:10px;font-size:1rem}
+.homelink .mi{background:var(--surface)}
+#sh-menu .menu button{box-shadow:none;background:var(--bg);padding:11px 14px}
+#sh-menu .mi{width:38px;height:38px;font-size:1.1rem;background:var(--surface)}
+.prcard{flex-direction:column;align-items:stretch;gap:10px;background:linear-gradient(160deg,var(--surface),var(--ink-soft))}
+.prtop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.prtop small{display:block;color:var(--muted);font-size:.78rem}.prtop b{font-family:var(--display);font-size:1.35rem;display:block}.prtop em{font-style:normal;color:var(--ink);font-weight:600;font-size:.9rem}
+.prrow{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.prrow div{text-align:center;border-radius:10px;padding:6px 2px;background:var(--surface)}
+.prrow div.on{background:var(--ink);color:#fff}.prrow div.on small{color:#fff}
+.prrow small{display:block;font-size:.68rem;color:var(--muted)}.prrow b{font-size:.8rem;font-variant-numeric:tabular-nums}
+.prayers{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.pchip{border:0;background:var(--surface);border-radius:14px;padding:10px 2px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.82rem;font-weight:600;box-shadow:var(--shadow)}
+.pchip span{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:.85rem}
+.pchip.on{color:#2FA36B}.pchip.on span{background:#2FA36B;border-color:#2FA36B;color:#fff}
+.stepper{display:flex;align-items:center;gap:10px}.stepper button{width:38px;height:38px;border-radius:12px;border:0;background:var(--ink-soft);color:var(--ink);font-size:1.3rem;font-weight:700}
+.stepper b{min-width:24px;text-align:center;font-size:1.2rem}
+.counters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ctr{flex-direction:column;align-items:stretch;gap:6px;text-align:center}
+.ctr small{color:var(--muted);font-size:.78rem}.ctr b{font-family:var(--display);font-size:1.7rem}.ctr b span{font-size:.8rem;color:var(--muted)}
+.ctr.done b{color:#2FA36B}
+.ctrbtns{display:grid;grid-template-columns:2fr 1fr;gap:6px}.ctrbtns button{border:0;border-radius:12px;background:var(--ink);color:#fff;font-weight:700;padding:12px 0;font-size:1rem}
+.ctrbtns button+button{background:var(--ink-soft);color:var(--ink)}
+.citycta{display:flex;align-items:center;gap:14px;border:1.5px dashed var(--ink)!important;text-align:start;width:100%}
+.adjgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.adjgrid select{padding:8px 4px;font-size:.82rem}.adjgrid label{font-size:.72rem}
+.hpr{display:flex;align-items:center;gap:12px;width:100%;border:0;border-radius:16px;padding:12px 14px;background:var(--surface);box-shadow:var(--shadow);text-align:start}
+.hpr .mt b{font-family:var(--display);font-size:1.1rem}
+.sadaqa-line{border:0;background:transparent;color:var(--muted);font-size:.82rem;padding:14px 8px 4px;text-align:center;width:100%}
+.aboutrow{width:100%;border:0;color:inherit;font:inherit}
+.about{display:flex;flex-direction:column;gap:12px;line-height:1.9}
+.about-t{margin:0;font-size:1rem}
+.about-s{margin:0;color:var(--ink);font-weight:600;font-size:.92rem}
+.hadith{margin:0;background:var(--ink-soft);border-radius:14px;padding:14px 16px;font-family:var(--display);font-size:.98rem;line-height:1.9}
+.hadith cite{display:block;font-style:normal;font-family:var(--body);color:var(--muted);font-size:.8rem;margin-top:4px}
+.welcome{text-align:center;padding-top:6px}.welcome h2{font-family:var(--display);margin:0;font-size:1.4rem}
+.wicon{width:64px;height:64px;border-radius:20px;background:var(--ink-soft);display:grid;place-items:center;font-size:2rem;margin:0 auto}
+.welcome .primary{width:100%;margin-top:4px}
+.greet{font-family:var(--display);font-size:1.05rem;color:#fff;opacity:.95}
+.namebtn{border:0;background:rgba(255,255,255,.2);color:#fff;border-radius:10px;padding:6px 12px;font-size:.82rem;font-weight:600;white-space:nowrap}
+.alertok{align-items:center;flex-wrap:nowrap;gap:12px}.alertok .grow{flex:1;min-width:0}
+.warnc{border-color:var(--amber)!important;background:var(--amber-soft)!important}
+.steps{margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:8px;font-size:.92rem;line-height:1.7}
+.steps small{color:var(--muted)}
+.lockcard{flex-direction:column;align-items:stretch;gap:12px;text-align:center;padding:24px 18px}
+.lockico{width:64px;height:64px;border-radius:20px;background:var(--ink-soft);display:grid;place-items:center;font-size:1.8rem;margin:0 auto}
+.lockcard input{width:100%;min-width:0}
+.pinin{text-align:center;font-size:1.6rem!important;letter-spacing:.4em;font-family:var(--display);padding:12px!important;background:var(--bg)!important}
+.warnbox,.tipbox{background:var(--amber-soft);color:var(--fg);border-radius:12px;padding:10px 12px;font-size:.85rem;text-align:start;line-height:1.7}
+.tipbox{background:var(--ink-soft)}
+.fadacts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fadacts button{border:0;background:var(--surface);border-radius:16px;padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:3px;box-shadow:var(--shadow);text-align:center}
+.fadacts span{width:46px;height:46px;border-radius:14px;background:var(--ink-soft);display:grid;place-items:center;font-size:1.35rem;margin-bottom:3px}
+.fadacts b{font-size:.92rem}.fadacts small{font-size:.7rem;color:var(--muted);line-height:1.4}
+.fadtxt{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+.chathead{display:flex;justify-content:space-between;align-items:center}
+.chat{display:flex;flex-direction:column;gap:8px;min-height:40vh}
+.bub{max-width:85%;padding:10px 14px;border-radius:18px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.95rem}
+.bub.u{align-self:flex-start;background:var(--ink);color:#fff;border-bottom-right-radius:6px}
+.bub.a{align-self:flex-end;background:var(--surface);box-shadow:var(--shadow);border-bottom-left-radius:6px}
+.bub.typing{color:var(--muted)}
+.chatin{display:flex;gap:8px;align-items:flex-end;position:sticky;bottom:calc(10px + env(safe-area-inset-bottom,0px));background:var(--bg);padding-top:6px}
+.chatin textarea{flex:1;min-height:52px;max-height:140px;border-radius:16px;padding:12px 14px}
+.chatin .primary{min-height:52px}
+.pcard{align-items:center;gap:14px;flex-wrap:nowrap}
+.pcard .grow{flex:1;min-width:0}.pcard small{display:block;color:var(--muted);font-size:.78rem}.pcard b{font-family:var(--display);font-size:1.25rem;display:block}.pcard em{font-style:normal;color:var(--muted);font-size:.85rem}
+.pring{width:66px;height:66px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-size:1.5rem;font-weight:700;background:#FCE4EC;color:#C2185B;border:3px solid #F48FB1}
+.pring.on{background:#E91E63;color:#fff;border-color:#E91E63}.pring.late{background:var(--amber-soft);color:var(--amber);border-color:var(--amber)}
+.pbtns{display:grid;grid-template-columns:2fr 1fr;gap:8px}.pbtns .primary{background:#D81B60}
+.pcal{flex-direction:column;align-items:stretch;gap:8px}
+.pgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.pgrid b{font-size:.72rem;color:var(--muted);font-weight:600}
+.pcal .pgrid{flex:none;width:100%}
+.pgrid span{height:38px;width:38px;max-width:100%;margin:0 auto;display:grid;place-items:center;border-radius:50%;font-size:.82rem;font-variant-numeric:tabular-nums}
+.pgrid span.pd{background:#E91E63;color:#fff}.pgrid span.pp{border:2px dashed #F48FB1}.pgrid span.pt{outline:2px solid var(--ink);outline-offset:1px;font-weight:700}
+.legend{font-size:.72rem;color:var(--muted);display:flex;gap:6px;align-items:center}.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.legend i.pd{background:#E91E63}.legend i.pp{border:2px dashed #F48FB1}
+.perban{align-items:center;gap:10px;flex-wrap:nowrap;background:#FCE4EC!important;font-size:1.3rem}.perban .grow{font-size:1rem}
+body.night .perban{background:#4A2A3A!important}body.night .pring{background:#4A2A3A;color:#F8BBD0}
+.phname{font-family:var(--display);font-size:1.25rem;display:block}
+.phday{font-family:var(--display);font-weight:700;color:var(--ink);font-size:1.1rem}.phday small{font-size:.75rem;color:var(--muted);font-weight:500}
+.phbar{position:relative;display:flex;height:14px;border-radius:8px;overflow:visible;gap:2px}
+.phbar i{display:block;height:100%;border-radius:4px}
+.phbar u{position:absolute;top:-6px;width:4px;height:26px;border-radius:3px;background:var(--fg);transform:translateX(50%)}
+.s-p{background:#E91E63}.s-f{background:#9FA8DA}.s-o{background:#26A69A}.s-l{background:#FFB74D}
+.phlegend{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:.74rem;color:var(--muted)}.phlegend i,.exbody i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:4px;vertical-align:middle}
+.phdesc{font-size:.9rem;line-height:1.8;background:var(--bg);border-radius:12px;padding:10px 12px}
+.infogrid{display:grid!important;grid-template-columns:1fr 1fr;gap:10px}.infogrid small{display:block;color:var(--muted);font-size:.74rem}.infogrid b{font-family:var(--display);font-size:1rem}
+.explain{display:block!important}.explain summary{display:flex;justify-content:space-between;align-items:center;gap:8px}.explain[open] .ma{transform:rotate(180deg)}
+.exbody{display:flex;flex-direction:column;gap:10px;margin-top:12px;font-size:.9rem;line-height:1.8}.exbody p{margin:0}
+.pgrid span.pf{background:rgba(38,166,154,.18);color:#00796B;font-weight:600}
+.legend i.pf{background:#26A69A}
+.dk{flex-direction:column;align-items:stretch;gap:10px}
+.dktext{font-family:"Amiri","IBM Plex Sans Arabic",serif;font-size:1.25rem;line-height:2.1;text-align:justify}
+.dktext.quran{font-family:"Amiri Quran","Amiri",serif;font-size:1.3rem;line-height:2.3}
+.dkfadl{font-size:.8rem;color:var(--muted);line-height:1.7}.dkfadl span{color:var(--ink);font-weight:600}
+.dkbtn{border:0;border-radius:14px;background:var(--ink-soft);color:var(--ink);display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;width:100%}
+.dkbtn b{font-family:var(--display);font-size:1.5rem;min-width:36px}.dkbtn span{font-size:.85rem}
+.dkbtn:active{transform:scale(.98)}
+.dk.done{opacity:.55}.dk.done .dktext{font-size:1rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dk.done .dkbtn{background:#2FA36B;color:#fff}
+.dkrem{align-items:center;flex-wrap:nowrap;gap:10px}.dkrem .grow{flex:1;min-width:0}
+.dkchips .chip{font-family:"Amiri",serif;font-size:1rem}
+.dkopen{margin-inline-start:auto;text-decoration:none;color:var(--ink);align-self:center}
+.qbtn{display:flex;align-items:center;justify-content:center;text-decoration:none}
+.qsura{display:flex;gap:8px}.qsura select{flex:1;min-width:0}.qgo{display:inline-flex;align-items:center;text-decoration:none;white-space:nowrap}
+.hnav .helpbtn{padding:0 10px}
+.hlp{display:block!important}.hlp summary{display:flex;align-items:center;gap:12px;cursor:pointer}.hlp summary b{flex:1}
+.hlp[open] summary .ma{transform:rotate(180deg)}.hlp .steps{margin:12px 0 10px}.hlp .steps li{line-height:1.8}
+.hlp .steps b{color:var(--ink)}.tipcard{background:var(--ink-soft)!important}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.quick button{border:0;background:var(--bg);border-radius:16px;padding:16px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;font-weight:600;font-size:.9rem}
+.quick button span{width:48px;height:48px;border-radius:14px;background:var(--ink-soft);display:grid;place-items:center;font-size:1.35rem}
+.hero h1{font-size:1.6rem}
+.menu{display:flex;flex-direction:column;gap:10px}
+.menu button{display:flex;align-items:center;gap:14px;background:var(--surface);border:0;border-radius:16px;padding:16px;text-align:start;box-shadow:var(--shadow)}
+.mi{width:44px;height:44px;border-radius:13px;background:var(--ink-soft);display:grid;place-items:center;font-size:1.3rem;flex:none}
+.mt{flex:1;display:flex;flex-direction:column;min-width:0}.mt b{font-weight:600}.mt small{color:var(--muted);font-size:.8rem}
+.ma{color:var(--muted);font-weight:700}
+.setrow{align-items:center;flex-wrap:nowrap}.setrow .grow{flex:1;min-width:0}
+.filebtn{display:inline-flex;align-items:center;cursor:pointer;white-space:nowrap}
+.syncdot{width:12px;height:12px;border-radius:50%;background:var(--muted);flex:none}
+.syncdot.ok{background:#2FA36B}.syncdot.err{background:var(--danger)}
+.switch{width:52px;height:30px;border-radius:30px;border:0;background:var(--line);position:relative;flex:none;padding:0}
+.switch i{position:absolute;top:3px;inset-inline-start:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.switch[aria-checked="true"]{background:var(--ink)}.switch[aria-checked="true"] i{inset-inline-start:25px}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+#budIn{border:0;background:var(--ink-soft);color:var(--ink);font-weight:600;text-align:center;border-radius:10px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<!-- ================= الرئيسية ================= -->
+<section class="view" id="v-home">
+  <header class="hero homehero"><div><div class="greet" id="hGreet"></div><h1 id="hDate"></h1><div class="sub" id="hHijri"></div></div><div class="nav"><button class="namebtn" id="nameBtn" data-open="sh-name" hidden>✎ اكتب اسمك</button></div></header>
+  <div id="homePrayer"></div>
+  <div class="report" id="report"></div>
+  <div class="alert" id="dueBox" hidden></div>
+  <div class="card blk"><div class="blkhead"><b>مهام النهارده</b><button class="tiny" data-go="tasks">كل المهام ←</button></div><div id="homeTasks"></div></div>
+  <div class="sec"><span>الأقسام</span></div>
+  <div class="menu" id="menu"></div>
+  <button class="sadaqa-line" data-open="sh-about">🤲 رفيق مجاني، صدقة جارية · لا تنسونا من الدعاء</button>
+</section>
+
+<!-- ================= عباداتي ================= -->
+<section class="view" id="v-ibada" hidden>
+  <div class="hnav"><button class="soft" data-go="home">→ الرئيسية</button><button class="soft helpbtn" data-help="ibada" aria-label="شرح القسم">❓ شرح</button><button class="soft" data-open="sh-menu">☰ الأقسام</button></div>
+  <header class="hero"><div><h1>عباداتي</h1><div class="sub" id="ibSub"></div></div><div class="nav"><button class="iconbtn" data-open="sh-ibset" aria-label="إعدادات عباداتي">⚙</button></div></header>
+  <div id="ibArea" class="view"></div>
+</section>
+
+<!-- ================= الشرح ================= -->
+<section class="view" id="v-help" hidden>
+  <div class="hnav"><button class="soft" data-go="home">→ الرئيسية</button><button class="soft" data-open="sh-menu">☰ الأقسام</button></div>
+  <header class="hero"><div><h1>إزاي أستخدم رفيق؟</h1><div class="sub">اضغط على أي قسم وهيفتحلك شرحه خطوة بخطوة</div></div></header>
+  <div id="helpArea" class="view"></div>
+</section>
+
+<!-- ================= الأذكار ================= -->
+<section class="view" id="v-adhkar" hidden>
+  <div class="hnav"><button class="soft" data-go="home">→ الرئيسية</button><button class="soft helpbtn" data-help="adhkar" aria-label="شرح القسم">❓ شرح</button><button class="soft" data-open="sh-menu">☰ الأقسام</button></div>
+  <header class="hero"><div><h1 id="dkTitle">الأذكار</h1><div class="sub">اضغط على العدّاد مع كل مرة</div></div><div class="nav"><button class="soft" data-go="ibada">🕌 عباداتي</button></div></header>
+  <div class="chips" id="dkSets"></div>
+  <div id="dkArea" class="view"></div>
+</section>
+
+<!-- ================= فضفضة ================= -->
+<section class="view" id="v-fad" hidden>
+  <div class="hnav"><button class="soft" data-go="home">→ الرئيسية</button><button class="soft helpbtn" data-help="fad" aria-label="شرح القسم">❓ شرح</button><button class="soft" data-open="sh-menu">☰ الأقسام</button></div>
+  <header class="hero"><div><h1>فضفضة 🤍</h1><div class="sub">مكانك الخاص. مقفول بالرقم السري ومتشفّر</div></div><div class="nav"><button class="soft" id="fadLockBtn" hidden>🔒 اقفل</button></div></header>
+  <div id="fadArea" class="view"></div>
+</section>
+
+<!-- ================= دورتي ================= -->
+<section class="view" id="v-period" hidden>
+  <div class="hnav"><button class="soft" data-go="home">→ الرئيسية</button><button class="soft helpbtn" data-help="period" aria-label="شرح القسم">❓ شرح</button><button class="soft" data-open="sh-menu">☰ الأقسام</button></div>
+  <header class="hero"><div><h1>دورتي 🌸</h1><div class="sub">متابعة الدورة الشهرية</div></div></header>
+  <div id="perArea" class="view"></div>
+</section>
+
+<!-- ================= المهام ================= -->
+<section class="view" id="v-tasks" hidden>
+  <div class="hnav"><button class="soft" data-go="home">→ الرئيسية</button><button class="soft helpbtn" data-help="tasks" aria-label="شرح القسم">❓ شرح</button><button class="soft" data-open="sh-menu">☰ الأقسام</button></div>
+  <header class="hero">
+    <div><h1 id="dTitle"></h1><div class="sub" id="dSub"></div></div>
+    <div class="nav">
+      <button class="iconbtn" id="prev" aria-label="اليوم السابق">→</button>
+      <button class="soft" id="goToday" hidden>اليوم</button>
+      <button class="iconbtn" id="next" aria-label="اليوم التالي">←</button>
+    </div>
+  </header>
+  
+  <div id="taskArea" class="view"></div>
+</section>
+
+<!-- ================= العادات ================= -->
+<section class="view" id="v-habits" hidden>
+  <div class="hnav"><button class="soft" data-go="home">→ الرئيسية</button><button class="soft helpbtn" data-help="habits" aria-label="شرح القسم">❓ شرح</button><button class="soft" data-open="sh-menu">☰ الأقسام</button></div>
+  <header class="hero"><div><h1>العادات</h1><div class="sub">علّم على عاداتك كل يوم، والنسبة بتتحسب لوحدها</div></div></header>
+  <div class="card" id="habSummary"></div>
+  <div id="habArea"></div>
+  
+</section>
+
+<!-- ================= المصاريف ================= -->
+<section class="view" id="v-money" hidden>
+  <div class="hnav"><button class="soft" data-go="home">→ الرئيسية</button><button class="soft helpbtn" data-help="money" aria-label="شرح القسم">❓ شرح</button><button class="soft" data-open="sh-menu">☰ الأقسام</button></div>
+  <header class="hero">
+    <div><h1>المصاريف</h1><div class="sub" id="mSub"></div></div>
+    <div class="nav">
+      <button class="iconbtn" id="mPrev" aria-label="الشهر السابق">→</button>
+      <button class="iconbtn" id="mNext" aria-label="الشهر التالي">←</button>
+    </div>
+  </header>
+  <div class="card" id="mSummary" style="flex-direction:column;align-items:stretch"></div>
+  
+  
+  <button class="smsbtn" type="button" data-open="sh-sms"><span>📩</span><span><b>الصق رسالة البنك</b><small>يقرا المبلغ والمكان والتاريخ لوحده</small></span><span>←</span></button>
+  <div id="expArea" class="view"></div>
+</section>
+
+<!-- ================= التذكيرات ================= -->
+<section class="view" id="v-rem" hidden>
+  <div class="hnav"><button class="soft" data-go="home">→ الرئيسية</button><button class="soft helpbtn" data-help="rem" aria-label="شرح القسم">❓ شرح</button><button class="soft" data-open="sh-menu">☰ الأقسام</button></div>
+  <header class="hero"><div><h1>التذكيرات</h1><div class="sub">حاجات عايزني أفكرك بيها في ميعادها</div></div></header>
+  
+  <div id="remArea" class="view"></div>
+</section>
+
+
+
+<section class="view" id="v-goals" hidden>
+  <div class="hnav"><button class="soft" data-go="home">→ الرئيسية</button><button class="soft helpbtn" data-help="goals" aria-label="شرح القسم">❓ شرح</button><button class="soft" data-open="sh-menu">☰ الأقسام</button></div>
+  <header class="hero"><div><h1>الأهداف</h1><div class="sub">حط هدف برقم، وسجّل تقدّمك فيه</div></div></header>
+  <div id="goalArea"></div>
+</section>
+
+<section class="view" id="v-subs" hidden>
+  <div class="hnav"><button class="soft" data-go="home">→ الرئيسية</button><button class="soft helpbtn" data-help="subs" aria-label="شرح القسم">❓ شرح</button><button class="soft" data-open="sh-menu">☰ الأقسام</button></div>
+  <header class="hero"><div><h1>الاشتراكات والأقساط</h1><div class="sub">هفكرك قبل أي ميعاد دفع بـ 3 أيام</div></div></header>
+  <div class="card" id="subSummary"></div>
+  <div id="subArea"></div>
+</section>
+
+<section class="view" id="v-notes" hidden>
+  <div class="hnav"><button class="soft" data-go="home">→ الرئيسية</button><button class="soft helpbtn" data-help="notes" aria-label="شرح القسم">❓ شرح</button><button class="soft" data-open="sh-menu">☰ الأقسام</button></div>
+  <header class="hero"><div><h1>الملاحظات</h1><div class="sub">أفكار وأرقام وحاجات عايز تفتكرها</div></div></header>
+  <div id="noteArea"></div>
+</section>
+
+<section class="view" id="v-settings" hidden>
+  <div class="hnav"><button class="soft" data-go="home">→ الرئيسية</button><button class="soft helpbtn" data-help="settings" aria-label="شرح القسم">❓ شرح</button><button class="soft" data-open="sh-menu">☰ الأقسام</button></div>
+  <header class="hero"><div><h1>الإعدادات</h1><div class="sub">الشكل وحفظ بياناتك</div></div></header>
+  <div class="card setrow"><div class="grow"><b>حفظ البيانات</b><div class="sub" id="syncTxt">جاري التحقق…</div></div><span class="syncdot" id="syncDot"></span></div>
+  <button class="card setrow aboutrow" data-open="sh-name"><div class="grow" style="text-align:start"><b>اسمك</b><div class="sub" id="setName">مش مكتوب</div></div><span class="ma">✎</span></button>
+  <button class="card setrow aboutrow" data-open="sh-ics"><div class="grow" style="text-align:start"><b>🔔 تنبيه الصلاة على الجوال</b><div class="sub">ملف مواقيت لسنة كاملة لتقويم الجوال</div></div><span class="ma">←</span></button>
+  <div class="card setrow"><div class="grow"><b>الجنس</b><div class="sub">عشان البرنامج يكلمك صح</div></div><select id="genSel" aria-label="الجنس"><option value="">مش محدد</option><option value="m">ذكر</option><option value="f">أنثى</option></select></div>
+  <div class="card setrow"><div class="grow"><b>العملة</b><div class="sub">اللي بتتسجل بيها مصاريفك</div></div><select id="curSel" aria-label="العملة" style="max-width:150px"></select></div>
+  <div class="card setrow"><div class="grow"><b>الوضع الليلي</b><div class="sub">ألوان هادية للمساء</div></div><button class="switch" id="nightSw" role="switch" aria-checked="false" aria-label="الوضع الليلي"><i></i></button></div>
+  <div class="card setrow" id="exportRow"><div class="grow"><b>احفظ نسخة كملف</b><div class="sub">ملف احتياطي على جوالك، لو حبيت تحتفظ بنسخة</div></div><button class="soft" id="bkSave" type="button">حفظ ملف</button></div>
+  <div class="card setrow"><div class="grow"><b>رجّع نسخة من ملف</b><div class="sub">اختار ملف نسخة اتحفظ قبل كده</div></div><label class="soft filebtn" for="bkFile">اختار ملف</label><input type="file" id="bkFile" accept=".json,application/json" hidden></div>
+  <div class="card setrow" id="installRow"><div class="grow"><b>📲 ثبّت رفيق على الشاشة</b><div class="sub" id="installTxt">يفتح زي التطبيق، ويشتغل من غير نت</div></div><button class="soft" id="installBtn" type="button">ثبّت</button></div>
+  <button class="card setrow aboutrow" data-go="help"><div class="grow" style="text-align:start"><b>📘 إزاي أستخدم رفيق؟</b><div class="sub">شرح كل قسم خطوة بخطوة</div></div><span class="ma">←</span></button>
+  <button class="card setrow aboutrow" data-open="sh-about"><div class="grow" style="text-align:start"><b>عن البرنامج</b><div class="sub">مجاني لوجه الله، صدقة جارية</div></div><span class="ma">←</span></button>
+  <div class="card setrow" id="exRow"><div class="grow"><b>امسح الأمثلة</b><div class="sub">يمسح البيانات التجريبية اللي أولها "مثال"</div></div><button class="soft" id="clrEx" type="button">امسح</button></div>
+</section>
+</div>
+
+
+<!-- ================= نوافذ الإدخال ================= -->
+<div class="sheet-bg" id="sheetBg" hidden></div>
+
+<div class="sheet" id="sh-task" hidden role="dialog" aria-label="مهمة جديدة">
+  <div class="grab"></div><div class="sh-head"><h2>مهمة جديدة</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <form id="fTask">
+    <div class="field"><label for="taskIn">المهمة</label><input type="text" id="taskIn" placeholder="مثال: مراجعة مستخلص فرع أبها" autocomplete="off"></div>
+    <div class="field"><label>امتى؟</label><div class="chips" id="whenChips"></div></div>
+    <div class="field"><label>الأولوية</label><div class="chips" id="priChips"></div></div>
+    <div class="field"><label>النوع</label><div class="chips" id="catChips"></div></div>
+    <button class="primary" type="submit">إضافة المهمة</button>
+  </form>
+</div>
+
+<div class="sheet" id="sh-hab" hidden role="dialog" aria-label="عادة جديدة">
+  <div class="grab"></div><div class="sh-head"><h2>عادة جديدة</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <form id="fHab">
+    <div class="field"><label for="habIn">العادة</label><input type="text" id="habIn" placeholder="مثال: مشي نص ساعة" autocomplete="off"></div>
+    <button class="primary" type="submit">إضافة العادة</button>
+  </form>
+</div>
+
+<div class="sheet" id="sh-exp" hidden role="dialog" aria-label="مصروف جديد">
+  <div class="grab"></div><div class="sh-head"><h2>مصروف جديد</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <form id="fExp">
+    <div class="field"><label for="expAmt">المبلغ (<span class="curName"></span>)</label><input type="number" id="expAmt" class="bigin" inputmode="decimal" step="0.01" min="0" placeholder="0.00"></div>
+    <div class="field"><label>الفئة</label><div class="chips" id="expCats"></div></div>
+    <div class="pair">
+      <div class="field"><label for="expNote">على إيه؟</label><input type="text" id="expNote" placeholder="مثال: بنزين" autocomplete="off"></div>
+      <div class="field"><label for="expDate">التاريخ</label><input type="date" id="expDate"></div>
+    </div>
+    <button class="primary" type="submit">سجّل المصروف</button>
+  </form>
+</div>
+
+<div class="sheet" id="sh-sms" hidden role="dialog" aria-label="رسالة البنك">
+  <div class="grab"></div><div class="sh-head"><h2>📩 رسالة البنك</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <div class="form">
+    <div class="field"><label for="smsIn">الصق الرسالة هنا</label><textarea id="smsIn" placeholder="انسخ رسالة البنك والصقها… وتقدر تلصق كذا رسالة مرة واحدة (سيب سطر فاضي بينهم)"></textarea></div>
+    <button class="primary" id="smsRead" type="button">اقرأ الرسايل</button>
+    <div id="smsOut" class="form"></div>
+  </div>
+</div>
+
+<div class="sheet" id="sh-rem" hidden role="dialog" aria-label="تذكير جديد">
+  <div class="grab"></div><div class="sh-head"><h2>تذكير جديد</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <form id="fRem">
+    <div class="field"><label for="remIn">فكّرني بـ</label><input type="text" id="remIn" placeholder="مثال: تجديد الإقامة" autocomplete="off"></div>
+    <div class="field"><label>امتى؟</label><div class="chips" id="afterChips"></div></div>
+    <div class="field"><label for="remAt">أو اختار الميعاد بالظبط</label><input type="datetime-local" id="remAt"></div>
+    <button class="primary" type="submit">حفظ التذكير</button>
+    <div class="hint">عشان يجيلك تنبيه على الجوال، اضغط "📅 أضف للتقويم" تحت التذكير بعد ما تحفظه.</div>
+  </form>
+</div>
+
+<div class="sheet" id="sh-goal" hidden role="dialog" aria-label="هدف جديد">
+  <div class="grab"></div><div class="sh-head"><h2>هدف جديد</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <form id="fGoal">
+    <div class="field"><label for="goalIn">الهدف</label><input type="text" id="goalIn" placeholder="مثال: أحوّش للإجازة" autocomplete="off"></div>
+    <div class="pair">
+      <div class="field"><label for="goalTarget">الرقم المطلوب</label><input type="number" id="goalTarget" min="1" placeholder="10000"></div>
+      <div class="field"><label for="goalUnit">الوحدة</label><input type="text" id="goalUnit" placeholder="جنيه، ريال، كتاب…"></div>
+    </div>
+    <div class="field"><label for="goalBy">الموعد النهائي (اختياري)</label><input type="date" id="goalBy"></div>
+    <button class="primary" type="submit">إضافة الهدف</button>
+  </form>
+</div>
+
+<div class="sheet" id="sh-sub" hidden role="dialog" aria-label="اشتراك أو قسط">
+  <div class="grab"></div><div class="sh-head"><h2>اشتراك أو قسط</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <form id="fSub">
+    <div class="field"><label for="subName">الاسم</label><input type="text" id="subName" placeholder="مثال: باقة النت، قسط العربية" autocomplete="off"></div>
+    <div class="pair">
+      <div class="field"><label for="subAmt">المبلغ (<span class="curName"></span>)</label><input type="number" id="subAmt" step="0.01" min="0" placeholder="0.00"></div>
+      <div class="field"><label for="subCycle">بيتكرر</label><select id="subCycle"><option value="m">كل شهر</option><option value="y">كل سنة</option></select></div>
+    </div>
+    <div class="field"><label for="subNext">ميعاد الدفع الجاي</label><input type="date" id="subNext"></div>
+    <button class="primary" type="submit">إضافة</button>
+  </form>
+</div>
+
+<div class="sheet" id="sh-note" hidden role="dialog" aria-label="ملاحظة جديدة">
+  <div class="grab"></div><div class="sh-head"><h2>ملاحظة جديدة</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <form id="fNote">
+    <div class="field"><label for="noteIn">الملاحظة</label><textarea id="noteIn" placeholder="اكتب ملاحظتك…"></textarea></div>
+    <button class="primary" type="submit">حفظ</button>
+  </form>
+</div>
+
+<div class="sheet" id="sh-confirm" hidden role="dialog" aria-label="تأكيد الاسترجاع">
+  <div class="grab"></div><div class="sh-head"><h2>ترجّع النسخة دي؟</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <div class="form"><p class="sub" id="confirmTxt" style="margin:0;font-size:.95rem"></p>
+  <button class="primary" id="confirmYes" type="button">أيوه، رجّعها</button><button class="soft" data-close type="button" style="min-height:48px">لأ، إلغاء</button></div>
+</div>
+
+<div class="sheet" id="sh-ibset" hidden role="dialog" aria-label="إعدادات عباداتي">
+  <div class="grab"></div><div class="sh-head"><h2>إعدادات عباداتي</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <form id="fIbset">
+    <div class="pair"><div class="field"><label for="ibCountry">البلد</label><select id="ibCountry"></select></div><div class="field"><label for="ibCity">المدينة</label><select id="ibCity"></select></div></div>
+    <div class="hint" id="ibMethod" style="text-align:start;margin-top:-8px"></div>
+    <div class="pair"><div class="field"><label for="ibWird">ورد القرآن (صفحات في اليوم)</label><input type="number" id="ibWird" min="1" max="604"></div><div class="field"><label for="ibKhatma">وصلت في الختمة لصفحة</label><input type="number" id="ibKhatma" min="0" max="603"></div></div>
+    <div class="field"><label>ميعاد حول زكاة المال (هجري) — اختياري</label><div class="pair"><select id="ibZm" aria-label="الشهر"></select><select id="ibZd" aria-label="اليوم"></select></div></div>
+    <div class="field"><label for="ibQada">أيام قضاء رمضان عليّ (غير أيام العذر المسجّلة)</label><input type="number" id="ibQada" min="0" max="60"></div>
+    <div class="field"><label for="ibHadj">ظبط التاريخ الهجري</label><select id="ibHadj"><option value="-1">يوم أقل (−1)</option><option value="0">زي تقويم أم القرى</option><option value="1">يوم زيادة (+1)</option></select></div>
+    <div class="field"><label>ظبط دقايق المواقيت على مسجدك</label><div class="adjgrid" id="ibAdj"></div></div>
+    <button class="primary" type="submit">حفظ</button>
+    <button class="soft" type="button" data-open="sh-ics" style="min-height:48px">🔔 تنبيه الصلاة على الجوال</button>
+  </form>
+</div>
+
+<div class="sheet" id="sh-about" hidden role="dialog" aria-label="عن البرنامج">
+  <div class="grab"></div><div class="sh-head"><h2>رفيق — مجاني لوجه الله</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <div class="about"><p class="about-t">هذا البرنامج صدقة جارية عنّي وعن والديّ وزوجتي وأولادي وإخوتي وجميع المسلمين.</p>
+    <p class="about-t">إن نفعك فادعُ لنا بالخير، ولا تنسَنا من صالح دعائك.</p>
+    <blockquote class="hadith">«إذا مات الإنسان انقطع عنه عمله إلا من ثلاثة: إلا من صدقة جارية، أو علم يُنتفع به، أو ولد صالح يدعو له»<cite>رواه مسلم</cite></blockquote>
+    <p class="about-s">انشره لغيرك، فالدال على الخير كفاعله.</p></div>
+</div>
+
+<div class="sheet" id="sh-welcome" hidden role="dialog" aria-label="أهلاً بيك">
+  <div class="grab"></div>
+  <div class="about welcome"><div class="wicon">🤲</div><h2>أهلاً بيك في رفيق</h2>
+    <p class="about-t" style="font-weight:600">البرنامج مجاني لوجه الله.</p>
+    <p class="about-t">هذا البرنامج صدقة جارية عنّي وعن والديّ وزوجتي وأولادي وإخوتي وجميع المسلمين.</p>
+    <p class="about-t">إن نفعك فادعُ لنا بالخير، ولا تنسَنا من صالح دعائك.</p>
+    <blockquote class="hadith">«إذا مات الإنسان انقطع عنه عمله إلا من ثلاثة: إلا من صدقة جارية، أو علم يُنتفع به، أو ولد صالح يدعو له»<cite>رواه مسلم</cite></blockquote>
+    <p class="about-s">انشره لغيرك، فالدال على الخير كفاعله.</p>
+    <div class="field" style="text-align:start;margin-top:4px"><label>انت</label><div class="chips" id="wGender"><button type="button" class="chip" data-g="m">👨 ذكر</button><button type="button" class="chip" data-g="f">👩 أنثى</button></div></div>
+    <div class="field" style="text-align:start"><label for="wName">اسمك إيه؟ عشان البرنامج يناديك بيه</label><input type="text" id="wName" placeholder="اكتب اسمك" autocomplete="given-name" maxlength="30"></div>
+    <button class="primary" id="welcomeGo" type="button">ابدأ</button>
+    <button class="soft" id="welcomeHelp" type="button" style="min-height:46px">📘 اعرف تستخدمه إزاي</button></div>
+</div>
+
+<div class="sheet" id="sh-name" hidden role="dialog" aria-label="اسمك">
+  <div class="grab"></div><div class="sh-head"><h2>اسمك إيه؟</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <form id="fName"><div class="field"><label for="nameIn">البرنامج هيناديك بيه في الرئيسية</label><input type="text" id="nameIn" placeholder="مثلاً: أحمد" autocomplete="given-name" maxlength="30"></div>
+  <button class="primary" type="submit">حفظ</button></form>
+</div>
+
+<div class="sheet" id="sh-ics" hidden role="dialog" aria-label="تنبيه الصلاة">
+  <div class="grab"></div><div class="sh-head"><h2>🔔 تنبيه الصلاة على الجوال</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <div class="form">
+    <div class="card" style="background:var(--bg);box-shadow:none"><div class="grow"><small class="sub">المدينة</small><div id="icsCity" style="font-weight:600"></div></div></div>
+    <div class="field"><label>التنبيه يجيلك امتى؟</label><div class="chips" id="icsOff"><button type="button" class="chip" data-v="0">في وقت الأذان</button><button type="button" class="chip" data-v="5">قبله بـ 5 دقايق</button><button type="button" class="chip" data-v="10">قبله بـ 10</button><button type="button" class="chip" data-v="15">قبله بـ 15</button></div></div>
+    <ol class="steps"><li>اضغط الزرار تحت، وهيتحفظ ملف فيه مواقيت الصلوات الخمس لسنة كاملة.</li><li>افتح الملف من التنزيلات.<br><small>الآيفون: اضغط "إضافة الكل". الأندرويد: افتحه بتطبيق تقويم جوجل.</small></li><li>خلاص، الجوال هينبّهك بكل صلاة طول السنة.</li></ol>
+    <button class="primary" id="icsGo" type="button">حمّل ملف مواقيت السنة</button>
+    <div class="tipbox" id="icsNo" hidden><b>حفظ الملفات مش متاح على الجهاز ده.</b><br>رفيق هيفضل يوريك الصلاة الجاية والوقت الفاضل عليها كل ما تفتحه. ولو عايز تنبيه بصوت الأذان والجوال مقفول، نزّل أي تطبيق أذان مجاني من المتجر (ابحث عن "مواقيت الصلاة" أو "أذان") واختار نفس طريقة الحساب: <b id="icsMeth"></b>.</div>
+    <div class="hint" id="icsMsg" style="color:var(--danger)"></div>
+    <div class="hint">التنبيه بصوت التقويم العادي. لو عايز صوت أذان، نزّل تطبيق أذان من المتجر.</div>
+  </div>
+</div>
+
+<div class="sheet" id="sh-fadw" hidden role="dialog" aria-label="اكتب">
+  <div class="grab"></div><div class="sh-head"><h2>✍️ فضفض</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <form id="fFadw"><div class="field"><label for="fadwIn">اكتب اللي جواك</label><textarea id="fadwIn" rows="8" placeholder="محدش هيشوف الكلام ده غيرك…"></textarea></div>
+  <div class="tipbox">🎤 <b>عايز تتكلم بدل ما تكتب؟</b> اضغط زرار المايك في الكيبورد بتاع الجوال واتكلم، وهو هيكتب كلامك لوحده.</div>
+  <button class="primary" type="submit">احفظ 🔒</button></form>
+</div>
+
+<div class="sheet" id="sh-forgot" hidden role="dialog" aria-label="نسيت الرقم">
+  <div class="grab"></div><div class="sh-head"><h2>نسيت الرقم السري؟</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <div class="form"><p class="sub" style="margin:0;font-size:.95rem">الكلام متشفّر بالرقم، فمحدش يقدر يفتحه من غيره. الحل الوحيد إنك تمسح فضفضة كلها (الكتابة والتسجيلات والمحادثة) وتختار رقم جديد.</p>
+  <button class="primary" id="forgotYes" type="button" style="background:var(--danger)">امسح فضفضة وابدأ من جديد</button><button class="soft" data-close type="button" style="min-height:48px">لأ، هحاول افتكر</button></div>
+</div>
+
+<div class="sheet" id="sh-chatclr" hidden role="dialog" aria-label="مسح المحادثة">
+  <div class="grab"></div><div class="sh-head"><h2>تمسح المحادثة؟</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <div class="form"><p class="sub" style="margin:0">المحادثة هتتمسح خالص ومش هترجع.</p><button class="primary" id="chatClrYes" type="button" style="background:var(--danger)">امسحها</button><button class="soft" data-close type="button" style="min-height:48px">لأ</button></div>
+</div>
+
+<div class="sheet" id="sh-pdate" hidden role="dialog" aria-label="تسجيل دورة">
+  <div class="grab"></div><div class="sh-head"><h2>🌸 سجّلي دورة</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <form id="fPdate"><div class="pair"><div class="field"><label for="pdStart">أول يوم</label><input type="date" id="pdStart"></div><div class="field"><label for="pdEnd">آخر يوم (لو خلصت)</label><input type="date" id="pdEnd"></div></div>
+  <button class="primary" type="submit">حفظ</button></form>
+</div>
+
+<div class="sheet" id="sh-dkrem" hidden role="dialog" aria-label="تذكير بالذكر">
+  <div class="grab"></div><div class="sh-head"><h2>⏰ ذكّرني بالذكر</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <div class="form">
+    <div class="field"><label>الذكر</label><div class="chips dkchips" id="dkrList"></div></div>
+    <div class="field"><label>كل قد إيه؟ (من 9 الصبح لـ 9 بالليل)</label><div class="chips" id="dkrEvery"><button type="button" class="chip" data-e="2">كل ساعتين</button><button type="button" class="chip" data-e="3">كل 3 ساعات</button><button type="button" class="chip" data-e="4">كل 4 ساعات</button></div></div>
+    <ol class="steps"><li>اضغط الزرار وهيتحفظ ملف.</li><li>افتح الملف من التنزيلات وضيفه للتقويم.</li><li>الجوال هيفكرك كل يوم في نفس المواعيد، من غير ما تحمّل حاجة تاني.</li></ol>
+    <button class="primary" id="dkrGo" type="button">حمّل ملف التذكير</button><div class="tipbox" id="dkrNo" hidden><b>حفظ الملفات مش متاح على الجهاز ده.</b><br>تقدر تعمل التذكير ده بنفسك: افتح تطبيق الساعة واعمل منبّه متكرر كل يوم، واكتب عليه الذكر.</div><div class="hint" id="dkrMsg" style="color:var(--danger)"></div>
+  </div>
+</div>
+
+<div class="sheet" id="sh-menu" hidden role="dialog" aria-label="الأقسام">
+  <div class="grab"></div><div class="sh-head"><h2>الأقسام</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <button class="homelink" data-go="home"><span class="mi">⌂</span><b>الرئيسية</b></button>
+  <div class="menu" id="menu2"></div>
+</div>
+
+<div class="sheet" id="sh-quick" hidden role="dialog" aria-label="إضافة">
+  <div class="grab"></div><div class="sh-head"><h2>تضيف إيه؟</h2><button type="button" class="iconbtn" data-close aria-label="إغلاق">×</button></div>
+  <div class="quick">
+    <button data-open="sh-task"><span>☑</span>مهمة</button>
+    <button data-open="sh-exp"><span>💵</span>مصروف</button>
+    <button data-open="sh-sms"><span>📩</span>رسالة بنك</button>
+    <button data-open="sh-rem"><span>⏰</span>تذكير</button>
+    <button data-open="sh-sub"><span>🔁</span>اشتراك أو قسط</button>
+    <button data-open="sh-note"><span>✎</span>ملاحظة</button>
+  </div>
+</div>
+
+<button class="fab" id="fab" type="button"><b>+</b><span id="fabTxt">مهمة</span></button>
+
+
+<div class="toast" id="toast"></div>
+
+<script>
+const NATIVE_DL={save:async({filename,data})=>{const blob=data instanceof Blob?data:new Blob([data],{type:'application/octet-stream'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},4000);return 'saved'}};
+const KEY='yawmi-v1';
+const CATS=['شغل','البيت','شخصي','مشتريات'];
+const PRI=[['u','عاجل ومهم'],['i','مهم'],['r','عاجل'],['','عادي']];
+const PRANK={u:0,i:1,r:2,'':3};
+const ECATS=['أكل','بقالة','مواصلات','فواتير','اشتراكات','البيت','الأولاد','صحة','تحويلات','أخرى'];
+const AFTER=[['ساعة',60],['3 ساعات',180],['بكرة',1440],['3 أيام',4320],['أسبوع',10080],['شهر',43200]];
+const $=id=>document.getElementById(id);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const ymd=d=>{const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
+const addDays=(s,n)=>{const d=new Date(s+'T12:00');d.setDate(d.getDate()+n);return ymd(d)};
+const addMonths=(s,n)=>{const d=new Date(s+'T12:00');const day=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+n);const last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(day,last));return ymd(d)};
+const diffDays=(a,b)=>Math.round((new Date(b+'T12:00')-new Date(a+'T12:00'))/864e5);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const money=n=>(Math.round(n*100)/100).toLocaleString('en-US',{maximumFractionDigits:2});
+const today=()=>ymd(new Date());
+const dname=(s,o)=>new Date(s+'T12:00').toLocaleDateString('ar-EG',o);
+
+/* ---------- التخزين ---------- */
+let S;
+function load(){
+  try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
+  normalize();
+  SECT.forEach(k=>last[k]=JSON.stringify(S[k]??null));
+  try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+}
+function normalize(){
+  if(!S)S={tasks:[],rems:[],notes:[]};
+  ['tasks','rems','notes','habits','exps','subs','goals'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});
+  if(!S.hlog)S.hlog={};
+  S.tasks.forEach(x=>{if(x.p===undefined)x.p=''});
+  if(S.budget===undefined)S.budget=0;
+  if(!S.profile)S.profile={name:''};
+  if(!S.period)S.period={cycles:[],log:{},lock:false};
+  if(!S.cur){let tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(e){}
+    S.cur={'Africa/Cairo':'EGP','Asia/Dubai':'AED','Asia/Kuwait':'KWD','Asia/Qatar':'QAR','Asia/Bahrain':'BHD','Asia/Muscat':'OMR','Asia/Amman':'JOD'}[tz]||'SAR'}
+  if(!S.ibada)S.ibada={city:null,wird:5,khatma:0,log:{},wlog:{},mlog:{},ylog:{},adj:{},hadj:0};
+  if(!S._ts)S._ts={};
+}
+/* ---------- الحفظ: على الجهاز فوراً + على حسابك تلقائياً ---------- */
+const SECT=['fad','period','cur','profile','ibada','tasks','rems','notes','habits','hlog','exps','budget','subs','goals'];
+let last={},pending={},writing={},flushT=null,COL=null,syncState='wait';
+function save(){
+  const now=Date.now();
+  SECT.forEach(k=>{const j=JSON.stringify(S[k]??null);if(last[k]!==j){last[k]=j;S._ts[k]=now;pending[k]=1}});
+  try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+  clearTimeout(flushT);flushT=setTimeout(flush,700);
+  setTimeout(()=>{if(typeof renderHome==='function'&&curView==='home'&&!openSh)renderHome()},0);
+}
+async function flush(){
+  if(!COL)return;
+  for(const k of Object.keys(pending)){
+    if(writing[k])continue;delete pending[k];writing[k]=1;
+    try{await COL.doc(k).set({v:S[k]??null,ts:S._ts[k]||Date.now()});setSync('ok')}
+    catch(e){pending[k]=1;setSync('err')}
+    finally{writing[k]=0}
+  }
+  if(Object.keys(pending).length){clearTimeout(flushT);flushT=setTimeout(flush,4000)}
+}
+function setSync(st){syncState=st;
+  const txt={wait:'جاري التحقق…',ok:'محفوظة على حسابك تلقائياً، وتفتحها من أي جهاز داخل عليه بحسابك.',
+    err:'فيه مشكلة في الاتصال. بياناتك محفوظة على الجهاز ده، وهتتحفظ على حسابك أول ما النت يرجع.',
+    local:'محفوظة على الجهاز ده بس. احفظ نسخة كملف كل فترة عشان ماتضيعش.'}[st];
+  const el=$('syncTxt');if(el)el.textContent=txt;const d=$('syncDot');if(d)d.className='syncdot '+(st==='ok'?'ok':st==='err'?'err':'');
+  if(typeof renderMenu==='function'&&$('menu')&&S)try{renderMenu()}catch(e){}
+}
+async function connect(){
+  let db=null,user=null;
+  try{[db,user]=await Promise.all([window.claude?.use?.('db'),window.claude?.use?.('user')])}catch(e){}
+  if(!db||!user){setSync('local');return}
+  let id=null;try{id=await user.id()}catch(e){}
+  if(!id){setSync('local');return}
+  const col=db.collection('data/users/'+id);
+  let snaps;
+  try{snaps=await Promise.race([Promise.all(SECT.map(k=>col.doc(k).get())),new Promise((_,r)=>setTimeout(()=>r('timeout'),10000))])}
+  catch(e){setSync('err');COL=col;SECT.forEach(k=>pending[k]=1);setTimeout(flush,5000);return}
+  let changed=false;
+  SECT.forEach((k,i)=>{const sn=snaps[i],r=sn&&sn.exists?sn.data():null,lt=S._ts[k]||0;
+    if(r&&(r.ts||0)>lt){S[k]=r.v;S._ts[k]=r.ts;last[k]=JSON.stringify(r.v??null);changed=true}
+    else if(!r||(r.ts||0)<lt)pending[k]=1});
+  COL=col;
+  if(changed){normalize();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}renderAll()}
+  setSync('ok');flush();
+}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2000)}
+function chipGroup(el,items,cur,label,onPick){
+  el.innerHTML=(label?`<span class="lbl">${label}</span>`:'')+items.map(([v,l])=>`<button type="button" class="chip" data-v="${v}" aria-pressed="${v===cur}">${l}</button>`).join('');
+  el.onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;[...el.querySelectorAll('.chip')].forEach(x=>x.setAttribute('aria-pressed',x===b));onPick(b.dataset.v)};
+}
+
+/* ================= المهام ================= */
+let view=today(), cat=CATS[0], pri='', when='t';
+chipGroup($('whenChips'),[['t','النهارده'],['m','بكرة']],when,'',v=>when=v);
+chipGroup($('priChips'),PRI.map(([v,l])=>[v,l]),pri,'',v=>pri=v);
+chipGroup($('catChips'),CATS.map(c=>[c,c]),cat,'',v=>cat=v);
+
+function tasksFor(d){return S.tasks.filter(x=>x.created<=d&&(!x.doneOn||x.doneOn>=d)).map(x=>({...x,isDone:x.doneOn===d}))}
+function habPct(d){if(!S.habits.length)return 0;const l=S.hlog[d]||{};return Math.round(S.habits.filter(h=>l[h.id]).length/S.habits.length*100)}
+function monthSum(m){return S.exps.filter(e=>e.date.startsWith(m)).reduce((a,e)=>a+e.amt,0)}
+
+function taskLi(x,mode){
+  const c=diffDays(x.created,view), pl=PRI.find(p=>p[0]===x.p);
+  return `<li class="${x.isDone?'done':''} ${x.p==='u'&&!x.isDone?'pu':''}">
+    <button class="check" data-act="tog" data-id="${x.id}" aria-label="${x.isDone?'إلغاء الإنجاز':'تم'}">${x.isDone?'✓':''}</button>
+    <div class="txt"><div class="t">${esc(x.text)}</div><div class="meta">
+      ${x.p?`<span class="tag ${x.p}">${pl[1]}</span>`:''}<span class="tag plain">${x.cat}</span>
+      ${mode!=='tom'&&c>0&&!x.isDone?`<span class="tag carry">مرحّلة من ${c===1?'امبارح':c+' أيام'}</span>`:''}
+      ${mode==='open'?`<button class="tiny" data-act="later" data-id="${x.id}">أجّل لبكرة ←</button>`:''}
+      ${mode==='tom'?`<button class="tiny" data-act="now" data-id="${x.id}">→ خليها النهارده</button>`:''}
+    </div></div>
+    ${view===today()?`<button class="del" data-act="delT" data-id="${x.id}" aria-label="حذف">×</button>`:''}</li>`;
+}
+function renderTasks(){
+  const t=today(), isToday=view===t;
+  $('dTitle').textContent=isToday?'النهارده':view===addDays(t,-1)?'امبارح':dname(view,{weekday:'long'});
+  const hjs=htxt(hij(view));
+  $('dSub').textContent=dname(view,{weekday:'long',day:'numeric',month:'long'})+(hjs?' · '+hjs:'');
+  $('next').disabled=isToday;$('goToday').hidden=isToday;if(typeof updateFab==='function'&&$('fab'))updateFab();
+  const list=tasksFor(view),done=list.filter(x=>x.isDone).length,hp=habPct(view);
+  const daySpend=S.exps.filter(e=>e.date===view).reduce((a,e)=>a+e.amt,0);
+
+  const open=list.filter(x=>!x.isDone).sort((a,b)=>PRANK[a.p]-PRANK[b.p]),fin=list.filter(x=>x.isDone);
+  let h='';
+  if(!list.length)h=`<div class="empty">${isToday?'مفيش مهام لسه. اضغط "+ مهمة" تحت، وأي حاجة مخلصتهاش هتنتقل معاك بكرة تلقائياً.':'مفيش مهام في اليوم ده.'}</div>`;
+  if(open.length)h+=`<div class="sec"><span>${isToday?'باقي':'ماخلصتش في اليوم ده'} (${open.length})</span><span>مترتبة بالأولوية</span></div><ul class="list">${open.map(x=>taskLi(x,isToday?'open':'')).join('')}</ul>`;
+  if(fin.length)h+=`<div class="sec"><span>خلصت (${fin.length})</span></div><ul class="list">${fin.map(x=>taskLi(x,'')).join('')}</ul>`;
+  if(isToday){const tom=S.tasks.filter(x=>x.created===addDays(t,1)&&!x.doneOn).sort((a,b)=>PRANK[a.p]-PRANK[b.p]);
+    if(tom.length)h+=`<div class="sec"><span>بكرة (${tom.length})</span></div><ul class="list">${tom.map(x=>taskLi({...x,isDone:false},'tom')).join('')}</ul>`}
+  $('taskArea').innerHTML=h;
+  renderAlerts();
+}
+$('fTask').onsubmit=e=>{e.preventDefault();const v=$('taskIn').value.trim();if(!v)return;
+  S.tasks.push({id:uid(),text:v,cat,p:pri,created:when==='m'?addDays(today(),1):today(),doneOn:null});
+  $('taskIn').value='';closeSheet();save();renderTasks();if(when==='m')toast('اتضافت لبكرة')};
+$('taskArea').onclick=e=>{const b=e.target.closest('[data-act]');if(!b)return;const x=S.tasks.find(t=>t.id===b.dataset.id);if(!x)return;const a=b.dataset.act;
+  if(a==='tog'){if(x.created>view)x.created=view;x.doneOn=x.doneOn===view?null:view;if(x.doneOn)toast('برافو ✓')}
+  else if(a==='later'){x.created=addDays(today(),1);toast('اتأجلت لبكرة')}
+  else if(a==='now'){x.created=today()}
+  else if(a==='delT'){S.tasks=S.tasks.filter(t=>t!==x);toast('اتحذفت')}
+  save();renderTasks()};
+$('prev').onclick=()=>{view=addDays(view,-1);renderTasks()};
+$('next').onclick=()=>{if(view<today()){view=addDays(view,1);renderTasks()}};
+$('goToday').onclick=()=>{view=today();renderTasks()};
+
+/* تنبيهات أعلى المهام: تذكيرات حان وقتها + اشتراكات قربت */
+function renderAlerts(){
+  const now=Date.now(),t=today();
+  const due=S.rems.filter(r=>!r.done&&new Date(r.at)<=now);
+  const subs=S.subs.filter(s=>diffDays(t,s.next)<=3);
+  const box=$('dueBox');box.hidden=!(due.length+subs.length);
+  box.innerHTML=(due.length?`<h3>⏰ تذكيرات حان وقتها</h3>`+due.map(r=>`<div class="row"><span>${esc(r.text)}</span><span style="display:flex;gap:6px">
+    <button class="mini" data-ract="task" data-id="${r.id}">للمهام</button><button class="mini" data-ract="snz" data-id="${r.id}">بكرة</button><button class="mini" data-ract="done" data-id="${r.id}">تم</button></span></div>`).join(''):'')
+   +(subs.length?`<h3>🔁 اشتراكات قرب ميعادها</h3>`+subs.map(s=>{const d=diffDays(t,s.next);return `<div class="row"><span>${esc(s.name)} · <span class="money">${money(s.amt)}</span> · ${d<0?'متأخر '+(-d)+' يوم':d===0?'النهارده':d===1?'بكرة':'بعد '+d+' أيام'}</span>
+    <button class="mini" data-sact="paid" data-id="${s.id}">اتدفع</button></div>`}).join(''):'');
+}
+$('dueBox').onclick=e=>{remAction(e);subAction(e)};
+
+/* ================= العادات ================= */
+function streak(id){let n=0,d=today();if(!(S.hlog[d]||{})[id])d=addDays(d,-1);while((S.hlog[d]||{})[id]){n++;d=addDays(d,-1)}return n}
+function renderHabits(){
+  const t=today(),p=habPct(t),C=2*Math.PI*36;
+  let wk=0;for(let k=0;k<7;k++)wk+=habPct(addDays(t,-k));wk=Math.round(wk/7);
+  $('habSummary').innerHTML=`<svg class="ring" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="36" fill="none" stroke="var(--line)" stroke-width="8"/>
+    <circle cx="42" cy="42" r="36" fill="none" stroke="var(--ink)" stroke-width="8" stroke-linecap="round" ${p?'':'opacity="0"'} stroke-dasharray="${C*p/100} ${C}" transform="rotate(-90 42 42)"/></svg>
+    <div style="flex:1;min-width:0"><div class="sub">نسبة النهارده</div><div class="big">${p}%</div><div class="sub">متوسط آخر 7 أيام: <b class="num">${wk}%</b></div></div>`;
+  const days=[...Array(7)].map((_,i)=>addDays(t,i-6));
+  $('habArea').innerHTML=S.habits.length?`<div class="list" style="background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden">${S.habits.map(h=>{
+    const on=(S.hlog[t]||{})[h.id],st=streak(h.id);
+    return `<div class="hab"><div class="top"><button class="check" style="${on?'background:var(--ink);border-color:var(--ink)':''}" data-hact="tog" data-d="${t}" data-id="${h.id}" aria-label="تم النهارده">${on?'✓':''}</button>
+      <div class="txt"><b style="font-weight:600">${h.icon||''} ${esc(h.name)}</b>${st?` <span class="tag carry">🔥 ${st} يوم ورا بعض</span>`:''}</div>
+      <button class="del" data-hact="del" data-id="${h.id}" aria-label="حذف العادة">×</button></div>
+      <div class="week">${days.map(d=>`<button class="dot ${(S.hlog[d]||{})[h.id]?'on':''} ${d===t?'today':''}" data-hact="tog" data-d="${d}" data-id="${h.id}" aria-label="${dname(d,{weekday:'long'})}">${dname(d,{weekday:'narrow'})}</button>`).join('')}</div></div>`}).join('')}</div>`
+    :`<div class="empty">اضغط "+ عادة" وضيف أول عادة، وكل يوم علّم عليها.</div>`;
+}
+$('habArea').onclick=e=>{const b=e.target.closest('[data-hact]');if(!b)return;const id=b.dataset.id;
+  if(b.dataset.hact==='tog'){const d=b.dataset.d;S.hlog[d]=S.hlog[d]||{};if(S.hlog[d][id])delete S.hlog[d][id];else S.hlog[d][id]=1}
+  else{S.habits=S.habits.filter(h=>h.id!==id)}
+  save();renderHabits();renderTasks()};
+$('fHab').onsubmit=e=>{e.preventDefault();const v=$('habIn').value.trim();if(!v)return;S.habits.push({id:uid(),icon:'✦',name:v});$('habIn').value='';closeSheet();save();renderHabits();renderTasks()};
+
+/* ================= المصاريف ================= */
+let month=today().slice(0,7), ecat=ECATS[0];
+$('expDate').value=today();
+chipGroup($('expCats'),ECATS.map(c=>[c,c]),ecat,'',v=>ecat=v);
+function renderMoney(){
+  const [y,m]=month.split('-').map(Number);
+  $('mSub').textContent=new Date(y,m-1,15).toLocaleDateString('ar-EG',{month:'long',year:'numeric'});
+  $('mNext').disabled=month>=today().slice(0,7);
+  const list=S.exps.filter(e=>e.date.startsWith(month)).sort((a,b)=>b.date.localeCompare(a.date));
+  const tot=list.reduce((a,e)=>a+e.amt,0),by={};list.forEach(e=>by[e.cat]=(by[e.cat]||0)+e.amt);
+  const rows=Object.entries(by).sort((a,b)=>b[1]-a[1]),max=rows.length?rows[0][1]:1,b=S.budget||0;
+  $('mSummary').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap">
+      <div><div class="sub">إجمالي الشهر</div><div class="big">${money(tot)} <span class="sub">${CUR()}</span></div></div>
+      <div style="text-align:end"><div class="sub">الميزانية</div><input type="number" id="budIn" value="${b||''}" placeholder="حط ميزانية" style="width:120px;padding:6px 8px"></div></div>
+    ${b?`<div class="bar" style="height:10px"><i style="width:${Math.min(100,tot/b*100)}%;background:${tot>b?'var(--danger)':'var(--ink)'}"></i></div>
+      <div class="sub">${tot>b?`زودت عن الميزانية <b class="money" style="color:var(--danger)">${money(tot-b)}</b> ${CUR()}`:`باقيلك <b class="money">${money(b-tot)}</b> ${CUR()}`}</div>`:''}
+    ${rows.length?`<div style="display:flex;flex-direction:column;gap:6px;margin-top:6px">${rows.map(([c,v])=>`<div class="catrow"><span>${c}</span><div class="bar"><i style="width:${v/max*100}%"></i></div><span class="money">${money(v)}</span></div>`).join('')}</div>`:''}`;
+  $('budIn').onchange=e=>{S.budget=+e.target.value||0;save();renderMoney()};
+  if(!list.length){$('expArea').innerHTML=`<div class="empty">مفيش مصاريف في الشهر ده. اضغط "+ مصروف" أو الصق رسالة البنك.</div>`;return}
+  const days={};list.forEach(e=>(days[e.date]=days[e.date]||[]).push(e));
+  $('expArea').innerHTML=Object.entries(days).map(([d,es])=>`<div class="sec"><span>${dname(d,{weekday:'long',day:'numeric',month:'long'})}</span><span class="money">${money(es.reduce((a,e)=>a+e.amt,0))}</span></div>
+    <ul class="list">${es.map(e=>`<li><div class="txt"><div>${esc(e.note||e.cat)}</div><div class="meta"><span class="tag">${e.cat}</span>${e.src==='sms'?'<span class="tag plain">من رسالة البنك</span>':''}</div></div>
+    <span class="money">${money(e.amt)}</span><button class="del" data-eid="${e.id}" aria-label="حذف">×</button></li>`).join('')}</ul>`).join('');
+}
+$('expArea').onclick=e=>{const b=e.target.closest('[data-eid]');if(!b)return;S.exps=S.exps.filter(x=>x.id!==b.dataset.eid);save();renderMoney();renderTasks()};
+$('fExp').onsubmit=e=>{e.preventDefault();const a=parseFloat($('expAmt').value);if(!(a>0)){toast('اكتب المبلغ');return}
+  const d=$('expDate').value||today();S.exps.push({id:uid(),amt:a,cat:ecat,note:$('expNote').value.trim(),date:d});
+  $('expAmt').value='';$('expNote').value='';closeSheet();month=d.slice(0,7);save();renderMoney();renderTasks();toast('اتسجّل ✓')};
+$('mPrev').onclick=()=>{const [y,m]=month.split('-').map(Number);const d=new Date(y,m-2,1);month=ymd(d).slice(0,7);renderMoney()};
+$('mNext').onclick=()=>{const [y,m]=month.split('-').map(Number);const d=new Date(y,m,1);const nm=ymd(d).slice(0,7);if(nm<=today().slice(0,7)){month=nm;renderMoney()}};
+
+/* --- قراءة رسالة البنك --- */
+const GUESS=[[/stc|موبايلي|mobily|زين|zain|سلام|فودافون|vodafone|اورانج|orange|اتصالات|etisalat|\bwe\b|المصرية للاتصالات|فوري|fawry|الكهرباء|كهرباء|المياه|مياه|sec\b|سداد/i,'فواتير'],
+  [/بنزين|petrol|adnoc|enoc|وطنية|wataniya|موبيل|mobil|توتال|total|شل|shell|كارجاس|ساسكو|sasco|الدريس|aldrees|نفط|محطة|اوبر|uber|كريم|careem|بولت|bolt/i,'مواصلات'],
+  [/بنده|panda|سبينيس|spinneys|هايبر وان|hyperone|فتح الله|اوسكار|خير زمان|اولاد رجب|مترو|metro|كارفور|carrefour|الدانوب|danube|لولو|lulu|التميمي|tamimi|العثيم|othaim|نستو|nesto|سوبر|ماركت|تموينات|بقالة|hyper|هايبر/i,'بقالة'],
+  [/طلبات|talabat|مؤمن|كشري|كافيه|كوفي|cafe|coffee|البيك|albaik|هرفي|herfy|كودو|kudu|ماكدونالدز|mcdonald|كنتاكي|kfc|بيتزا|pizza|هنقرستيشن|hunger|جاهز|jahez|مرسول|ستاربكس|starbucks|شاورما|burger|برجر/i,'أكل'],
+  [/صيدليات|العزبي|el ezaby|صيدلية|النهدي|nahdi|الدواء|pharma|مستشفى|مستوصف|عيادة|hospital|clinic/i,'صحة'],
+  [/نتفليكس|netflix|شاهد|shahid|spotify|سبوتيفاي|apple\.com|itunes|google|youtube|اشتراك/i,'اشتراكات'],
+  [/مدرس|مكتبة|جرير|jarir|قرطاسية|مدرسة|school/i,'الأولاد'],
+  [/حوالة|تحويل|transfer|سحب|atm|صراف/i,'تحويلات']];
+function parseSMS(raw){
+  const s=raw.replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/٫/g,'.').replace(/٬/g,',');
+  const income=/(إيداع|ايداع|واردة|وارده|استرداد|مسترد|راتب|إضافة|credited|deposit)/i.test(s)&&!/(شراء|خصم|سحب|مدفوعات|purchase|debit)/i.test(s);
+  const num='([\\d,]+(?:\\.\\d+)?)';
+  const cur='(?:SAR|SR|EGP|L\\.?E\\.?|AED|KWD|QAR|BHD|OMR|JOD|USD|\\$|ر\\.?\\s?س\\.?|ج\\.?\\s?م\\.?|ريال|جنيه|جم|درهم|دينار|دولار)';
+  const m=s.match(new RegExp('(?:بمبلغ|المبلغ|مبلغ|amount|قيمة)\\s*[:：]?\\s*'+cur+'?\\s*'+num,'i'))||s.match(new RegExp(cur+'\\s*'+num,'i'))||s.match(new RegExp(num+'\\s*'+cur,'i'));
+  if(!m)return null;
+  const amt=parseFloat(m[1].replace(/,/g,''));if(!(amt>0))return null;
+  let merch='';const mm=s.match(/(?:لدى|لدي|عند|المتجر|التاجر|من(?=\s*[:：])|at|from)\s*[:：]?\s*([^\n]+)/i);
+  if(mm)merch=mm[1].replace(/\s*\d{1,2}[\/\-.]\d.*$/,'').replace(/\s+(في|بتاريخ|يوم|on|بطاقة|رصيد|الرصيد)(\s.*)?$/i,'').trim().slice(0,40);
+  let date=today();const d1=s.match(/(20\d{2})[-\/.](\d{1,2})[-\/.](\d{1,2})/),d2=s.match(/\b(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{2,4})\b/);
+  let cand=null;if(d1)cand=[+d1[1],+d1[2],+d1[3]];else if(d2){let yy=+d2[3];if(yy<100)yy+=2000;cand=[yy,+d2[2],+d2[1]]}
+  if(cand&&cand[1]>=1&&cand[1]<=12&&cand[2]>=1&&cand[2]<=31){const c=cand[0]+'-'+String(cand[1]).padStart(2,'0')+'-'+String(cand[2]).padStart(2,'0');if(c<=today()&&diffDays(c,today())<400)date=c}
+  let cat='أخرى';const hay=merch+' '+s;for(const [re,c] of GUESS)if(re.test(hay)){cat=c;break}
+  return {amt,merch,date,cat,income};
+}
+let parsed=[];
+$('smsRead').onclick=()=>{
+  const parts=$('smsIn').value.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
+  parsed=parts.map(parseSMS).filter(Boolean);
+  if(!parsed.length){$('smsOut').innerHTML=`<div class="hint">ماعرفتش ألاقي مبلغ في الرسالة. اتأكد إنك لصقت رسالة شراء أو خصم من البنك.</div>`;return}
+  $('smsOut').innerHTML=parsed.map((p,i)=>`<div class="parsed"><input type="checkbox" id="pk${i}" ${p.income?'':'checked'} aria-label="ضمّها">
+    <div class="fields"><input type="number" id="pa${i}" value="${p.amt}" step="0.01" style="width:95px" aria-label="المبلغ"><input type="text" id="pn${i}" value="${esc(p.merch)}" placeholder="المكان" style="flex:1;min-width:110px" aria-label="المكان">
+    <select id="pc${i}" aria-label="الفئة">${ECATS.map(c=>`<option ${c===p.cat?'selected':''}>${c}</option>`).join('')}</select><input type="date" id="pd${i}" value="${p.date}" aria-label="التاريخ">
+    ${p.income?'<span class="hint">دي شكلها رسالة إيداع، مش هتتسجّل كمصروف إلا لو علّمت عليها.</span>':''}</div></div>`).join('')
+    +`<button class="primary" id="smsSave" type="button">سجّل ${parsed.length>1?'المصاريف':'المصروف'}</button>`;
+  $('smsSave').onclick=()=>{let n=0;parsed.forEach((p,i)=>{if(!$('pk'+i).checked)return;const a=parseFloat($('pa'+i).value);if(!(a>0))return;
+      S.exps.push({id:uid(),amt:a,cat:$('pc'+i).value,note:$('pn'+i).value.trim(),date:$('pd'+i).value||today(),src:'sms'});n++});
+    if(!n)return;save();$('smsIn').value='';$('smsOut').innerHTML='';closeSheet();month=today().slice(0,7);renderMoney();renderTasks();toast(`اتسجّل ${n} مصروف ✓`)};
+};
+
+/* ================= التذكيرات ================= */
+let afterMin=1440;
+const fmtAt=iso=>{const d=new Date(iso);return d.toLocaleDateString('ar-EG',{weekday:'short',day:'numeric',month:'short'})+' · '+d.toLocaleTimeString('ar-EG',{hour:'numeric',minute:'2-digit'})};
+function rel(iso){const m=Math.round((new Date(iso)-Date.now())/60000);if(m<=0)return 'حان وقته';if(m<60)return `بعد ${m} دقيقة`;const h=Math.round(m/60);if(h<24)return `بعد ${h} ساعة`;const d=Math.round(h/24);return d===1?'بكرة':`بعد ${d} يوم`}
+const gStamp=d=>new Date(d).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+function gcal(text,start,end,details,recur,allDay){
+  const p=new URLSearchParams({action:'TEMPLATE',text,details:details||'من برنامج رفيق'});
+  p.set('dates',allDay?start.replace(/-/g,'')+'/'+end.replace(/-/g,''):gStamp(start)+'/'+gStamp(end));
+  if(recur)p.set('recur','RRULE:'+recur);
+  return `<a class="mini" href="https://calendar.google.com/calendar/render?${p.toString()}" target="_blank" rel="noopener">📅 أضف للتقويم</a>`;
+}
+const remCal=r=>gcal(r.text,r.at,new Date(new Date(r.at).getTime()+30*60000).toISOString(),'تذكير من برنامج رفيق');
+const localInput=d=>new Date(d-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);
+function setAfter(m){afterMin=m;$('remAt').value=localInput(new Date(Date.now()+m*60000));[...$('afterChips').children].forEach(x=>x.setAttribute('aria-pressed',+x.dataset.m===m))}
+$('afterChips').innerHTML=AFTER.map(([l,m])=>`<button type="button" class="chip" data-m="${m}">بعد ${l}</button>`).join('');
+$('afterChips').onclick=e=>{const b=e.target.closest('[data-m]');if(b)setAfter(+b.dataset.m)};
+$('remAt').oninput=()=>[...$('afterChips').children].forEach(x=>x.setAttribute('aria-pressed','false'));
+$('fRem').onsubmit=e=>{e.preventDefault();const v=$('remIn').value.trim(),at=$('remAt').value;if(!v||!at)return;const iso=new Date(at).toISOString();
+  S.rems.push({id:uid(),text:v,at:iso,done:false});$('remIn').value='';setAfter(1440);closeSheet();save();renderAll();toast('اتحفظ. اضغط "أضف للتقويم" عشان يجيلك تنبيه')};
+function remAction(e){const b=e.target.closest('[data-ract]');if(!b)return;const x=S.rems.find(r=>r.id===b.dataset.id);if(!x)return;const a=b.dataset.ract;
+  if(a==='done'){x.done=true;toast('تمام ✓')}
+  else if(a==='snz'){x.at=new Date(Date.now()+864e5).toISOString();toast('أجلته لبكرة')}
+  else if(a==='task'){S.tasks.push({id:uid(),text:x.text,cat:'شخصي',p:'i',created:today(),doneOn:null});x.done=true;toast('اتنقلت لمهام النهارده')}
+  else if(a==='del'){S.rems=S.rems.filter(r=>r!==x)}
+  else if(a==='undo'){x.done=false;x.at=new Date(Date.now()+36e5).toISOString()}
+  save();renderAll()}
+function renderRems(){
+  const now=Date.now(),act=S.rems.filter(r=>!r.done).sort((a,b)=>a.at.localeCompare(b.at));
+  const due=act.filter(r=>new Date(r.at)<=now),up=act.filter(r=>new Date(r.at)>now),doneL=S.rems.filter(r=>r.done).slice(-10).reverse();
+  const li=(r,isDue)=>`<li><div class="txt"><div class="t">${esc(r.text)}</div><div class="when ${isDue?'due':''}">${rel(r.at)} · ${fmtAt(r.at)}</div>
+    ${!isDue?`<div class="meta" style="margin-top:6px">${remCal(r)}</div>`:''}
+    ${isDue?`<div class="meta" style="margin-top:6px"><button class="mini" data-ract="task" data-id="${r.id}">انقلها لمهام النهارده</button><button class="mini" data-ract="snz" data-id="${r.id}">أجّل لبكرة</button><button class="mini" data-ract="done" data-id="${r.id}">تم</button></div>`:''}</div>
+    <button class="del" data-ract="del" data-id="${r.id}" aria-label="حذف">×</button></li>`;
+  let h='';
+  if(!act.length)h=`<div class="empty">مفيش تذكيرات. اضغط "+ تذكير" واختار "بعد أسبوع" مثلاً، وهتلاقيها فوق مهامك يوم ما يحين وقتها.</div>`;
+  if(due.length)h+=`<div class="sec"><span>حان وقتها (${due.length})</span></div><ul class="list">${due.map(r=>li(r,1)).join('')}</ul>`;
+  if(up.length)h+=`<div class="sec"><span>جاية (${up.length})</span></div><ul class="list">${up.map(r=>li(r,0)).join('')}</ul>`;
+  if(doneL.length)h+=`<div class="sec"><span>اتعملت مؤخراً</span></div><ul class="list">${doneL.map(r=>`<li class="done"><div class="txt"><div class="t">${esc(r.text)}</div></div><button class="mini" data-ract="undo" data-id="${r.id}">رجّعها</button></li>`).join('')}</ul>`;
+  $('remArea').innerHTML=h;
+}
+$('remArea').onclick=remAction;
+
+/* ================= المزيد ================= */
+
+
+/* --- الأهداف --- */
+function renderGoals(){
+  $('goalArea').innerHTML=S.goals.length?`<ul class="list">${S.goals.map(g=>{const p=Math.min(100,Math.round(g.cur/g.target*100));
+    const left=g.by?diffDays(today(),g.by):null;
+    return `<li><div class="txt" style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;gap:8px"><b style="font-weight:600">${p>=100?'🏆 ':''}${esc(g.name)}</b><span class="num" style="color:var(--ink);font-weight:600">${p}%</span></div>
+      <div class="bar" style="height:8px"><i style="width:${p}%"></i></div>
+      <div class="meta"><span class="when"><span class="money">${money(g.cur)}</span> من <span class="money">${money(g.target)}</span> ${esc(g.unit||'')}</span>
+        ${left!==null?`<span class="tag ${left<0?'u':left<14?'r':''}">${left<0?'عدّى ميعاده':left===0?'النهارده آخر يوم':'فاضل '+left+' يوم'}</span>`:''}</div>
+      <div class="meta"><input type="number" id="ga-${g.id}" placeholder="+ كام؟" style="width:90px;padding:5px 8px;font-size:.85rem"><button class="mini" data-gact="add" data-id="${g.id}">سجّل تقدّم</button><button class="mini" data-gact="one" data-id="${g.id}">+1</button></div></div>
+      <button class="del" data-gact="del" data-id="${g.id}" aria-label="حذف">×</button></li>`}).join('')}</ul>`
+    :`<div class="empty">مفيش أهداف لسه. اضغط "+ هدف"، مثلاً: "أحوّش 10000" أو "أقرا 12 كتاب".</div>`;
+}
+$('goalArea').onclick=e=>{const b=e.target.closest('[data-gact]');if(!b)return;const g=S.goals.find(x=>x.id===b.dataset.id);if(!g)return;const a=b.dataset.gact;
+  if(a==='del')S.goals=S.goals.filter(x=>x!==g);
+  else{const v=a==='one'?1:parseFloat($('ga-'+g.id).value);if(!v)return;const was=g.cur<g.target;g.cur=Math.max(0,g.cur+v);if(was&&g.cur>=g.target)toast('🏆 مبروك، حققت الهدف!')}
+  save();renderGoals()};
+$('fGoal').onsubmit=e=>{e.preventDefault();const n=$('goalIn').value.trim(),t=parseFloat($('goalTarget').value);if(!n||!(t>0)){toast('اكتب الهدف والرقم المطلوب');return}
+  S.goals.push({id:uid(),name:n,target:t,cur:0,unit:$('goalUnit').value.trim(),by:$('goalBy').value});['goalIn','goalTarget','goalUnit','goalBy'].forEach(i=>$(i).value='');closeSheet();save();renderGoals()};
+
+/* --- الاشتراكات --- */
+$('subNext').value=addMonths(today(),1);
+function renderSubs(){
+  const t=today(),list=[...S.subs].sort((a,b)=>a.next.localeCompare(b.next));
+  const mo=S.subs.reduce((a,s)=>a+(s.cycle==='y'?s.amt/12:s.amt),0);
+  $('subSummary').innerHTML=`<div style="flex:1"><div class="sub">تكلفة الاشتراكات في الشهر</div><div class="big">${money(mo)} <span class="sub">${CUR()}</span></div></div><div style="text-align:end"><div class="sub">في السنة</div><b class="money">${money(mo*12)}</b></div>`;
+  $('subArea').innerHTML=list.length?`<ul class="list">${list.map(s=>{const d=diffDays(t,s.next);
+    return `<li><div class="txt"><div style="font-weight:600">${esc(s.name)}</div><div class="meta"><span class="money">${money(s.amt)}</span><span class="tag plain">${s.cycle==='y'?'سنوي':'شهري'}</span>
+      <span class="tag ${d<0?'u':d<=3?'r':''}">${d<0?'متأخر '+(-d)+' يوم':d===0?'التجديد النهارده':d===1?'التجديد بكرة':'التجديد بعد '+d+' يوم'}</span></div>
+      <div class="when">${dname(s.next,{weekday:'long',day:'numeric',month:'long'})}</div>
+      <div class="meta">${gcal('تجديد '+s.name+' · '+money(s.amt)+' '+CUR(),s.next,addDays(s.next,1),'ميعاد تجديد/دفع من برنامج رفيق',s.cycle==='y'?'FREQ=YEARLY':'FREQ=MONTHLY',true)}<button class="mini" data-sact="paid" data-id="${s.id}">اتدفع ← سجّله مصروف</button><button class="mini" data-sact="skip" data-id="${s.id}">اتجدد بدون تسجيل</button></div></div>
+      <button class="del" data-sact="del" data-id="${s.id}" aria-label="حذف">×</button></li>`}).join('')}</ul>`
+    :`<div class="empty">اضغط "+ اشتراك" وضيف اشتراكاتك وأقساطك، وهفكرك قبل كل ميعاد.</div>`;
+}
+function subAction(e){const b=e.target.closest('[data-sact]');if(!b)return;const s=S.subs.find(x=>x.id===b.dataset.id);if(!s)return;const a=b.dataset.sact;
+  if(a==='del')S.subs=S.subs.filter(x=>x!==s);
+  else{if(a==='paid'){S.exps.push({id:uid(),amt:s.amt,cat:'اشتراكات',note:s.name,date:today()});toast('اتسجّل في المصاريف ✓')}
+    do{s.next=addMonths(s.next,s.cycle==='y'?12:1)}while(s.next<=today())}
+  save();renderAll()}
+$('subArea').onclick=subAction;
+$('fSub').onsubmit=e=>{e.preventDefault();const n=$('subName').value.trim(),a=parseFloat($('subAmt').value);if(!n||!(a>0)){toast('اكتب الاسم والمبلغ');return}
+  S.subs.push({id:uid(),name:n,amt:a,cycle:$('subCycle').value,next:$('subNext').value||addMonths(today(),1)});$('subName').value='';$('subAmt').value='';closeSheet();save();renderAll()};
+
+/* --- الملاحظات --- */
+function renderNotes(){
+  const n=[...S.notes].sort((a,b)=>(b.pin-a.pin)||(b.ts-a.ts));
+  $('noteArea').innerHTML=n.length?`<ul class="list">${n.map(x=>`<li><div class="txt"><div class="note">${esc(x.text)}</div><div class="when">${new Date(x.ts).toLocaleDateString('ar-EG',{day:'numeric',month:'long'})}</div></div>
+    <button class="pin ${x.pin?'on':''}" data-nact="pin" data-id="${x.id}" aria-label="تثبيت">📌</button><button class="del" data-nact="del" data-id="${x.id}" aria-label="حذف">×</button></li>`).join('')}</ul>`
+    :`<div class="empty">مفيش ملاحظات لسه.</div>`;
+}
+$('fNote').onsubmit=e=>{e.preventDefault();const v=$('noteIn').value.trim();if(!v)return;S.notes.push({id:uid(),text:v,ts:Date.now(),pin:false});$('noteIn').value='';closeSheet();save();renderNotes()};
+$('noteArea').onclick=e=>{const b=e.target.closest('[data-nact]');if(!b)return;const x=S.notes.find(n=>n.id===b.dataset.id);if(!x)return;
+  if(b.dataset.nact==='pin')x.pin=!x.pin;else S.notes=S.notes.filter(n=>n!==x);save();renderNotes()};
+
+/* --- النسخة الاحتياطية --- */
+$('bkFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;let d;
+  try{d=JSON.parse(await f.text())}catch(err){toast('الملف ده مش نسخة من رفيق');return}
+  if(!d||!Array.isArray(d.tasks)){toast('الملف ده مش نسخة من رفيق');return}
+  $('confirmTxt').textContent=`الملف فيه ${d.tasks.length} مهمة و ${(d.exps||[]).length} مصروف. هيستبدل بياناتك الحالية.`;
+  pendingRestore=d;openSheet('sh-confirm')};
+let pendingRestore=null;
+$('confirmYes').onclick=()=>{if(!pendingRestore)return;const d=pendingRestore;pendingRestore=null;S=d;normalize();S._ts={};last={};save();renderAll();closeSheet();toast('اترجعت البيانات ✓')};
+(async()=>{let dl=null;try{dl=await Promise.resolve(NATIVE_DL)}catch(e){}
+  if(!dl){$('exportRow').hidden=true;return}
+  $('bkSave').onclick=async()=>{try{await dl.save({filename:'rafiq-backup-'+today()+'.json',data:JSON.stringify(S)});toast('اتحفظ الملف ✓')}catch(e){}}})();
+$('clrEx').onclick=()=>{const ex=x=>/^مثال/.test(x.text||x.name||x.note||'');
+  ['tasks','rems','notes','habits','exps','subs','goals'].forEach(k=>S[k]=S[k].filter(x=>!ex(x)));save();renderAll();toast('اتمسحت الأمثلة')};
+
+
+/* ================= عباداتي ================= */
+const CITIES={
+ 'السعودية':[['أبها',18.2164,42.5053],['بيشة',19.99,42.6052],['خميس مشيط',18.3,42.7333],['الرياض',24.7136,46.6753],['جدة',21.4858,39.1925],['مكة المكرمة',21.3891,39.8579],['المدينة المنورة',24.5247,39.5692],['الدمام',26.4207,50.0888],['الطائف',21.2703,40.4158],['جازان',16.8892,42.5511],['نجران',17.4924,44.1277],['الباحة',20.0129,41.4677],['تبوك',28.3835,36.5662],['بريدة',26.326,43.975],['حائل',27.5114,41.7208]],
+ 'مصر':[['القاهرة',30.0444,31.2357],['الجيزة',30.0131,31.2089],['الإسكندرية',31.2001,29.9187],['المنصورة',31.0409,31.3785],['طنطا',30.7865,31.0004],['الزقازيق',30.5877,31.502],['المحلة الكبرى',30.9697,31.1681],['بنها',30.4659,31.1848],['شبين الكوم',30.5503,31.0106],['كفر الشيخ',31.1107,30.9388],['دمنهور',31.0341,30.4682],['دمياط',31.4165,31.8133],['بورسعيد',31.2653,32.3019],['الإسماعيلية',30.5965,32.2715],['السويس',29.9668,32.5498],['الفيوم',29.3084,30.8428],['بني سويف',29.0661,31.0994],['المنيا',28.0871,30.7618],['أسيوط',27.1809,31.1837],['سوهاج',26.5591,31.6948],['قنا',26.1551,32.716],['الأقصر',25.6872,32.6396],['أسوان',24.0889,32.8998],['الغردقة',27.2579,33.8116],['مرسى مطروح',31.3543,27.2373]]};
+const METHOD={'السعودية':{fajr:18.5,ishaMin:90,name:'تقويم أم القرى'},'مصر':{fajr:19.5,isha:17.5,name:'الهيئة المصرية العامة للمساحة'}};
+const PR=[['fajr','الفجر'],['dhuhr','الظهر'],['asr','العصر'],['maghrib','المغرب'],['isha','العشاء']];
+const DAILY=[['rawatib','السنن الرواتب','12 ركعة مع الفرائض'],['duha','صلاة الضحى',''],['witr','الوتر',''],['qiyam','قيام الليل',''],
+  ['am','أذكار الصباح',''],['pm','أذكار المساء',''],['after','أذكار بعد الصلاة',''],['sleep','أذكار النوم','']];
+const COUNTERS=[['istighfar','الاستغفار',100],['salawat','الصلاة على النبي ﷺ',100]];
+const HMONTHS=['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+
+/* --- مواقيت الصلاة (حساب فلكي داخل البرنامج) --- */
+const DR=Math.PI/180,dsin=x=>Math.sin(x*DR),dcos=x=>Math.cos(x*DR),dtan=x=>Math.tan(x*DR),
+  dasin=x=>Math.asin(x)/DR,dacos=x=>Math.acos(Math.max(-1,Math.min(1,x)))/DR,datan2=(y,x)=>Math.atan2(y,x)/DR,dacot=x=>Math.atan(1/x)/DR,
+  fixA=a=>{a-=360*Math.floor(a/360);return a<0?a+360:a},fixH=h=>{h-=24*Math.floor(h/24);return h<0?h+24:h};
+function julian(y,m,d){if(m<=2){y-=1;m+=12}const A=Math.floor(y/100),B=2-A+Math.floor(A/4);return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5}
+function sunPos(jd){const D=jd-2451545,g=fixA(357.529+0.98560028*D),q=fixA(280.459+0.98564736*D),L=fixA(q+1.915*dsin(g)+0.02*dsin(2*g)),
+  e=23.439-0.00000036*D,RA=datan2(dcos(e)*dsin(L),dcos(L))/15;return{decl:dasin(dsin(e)*dsin(L)),eqt:q/15-fixH(RA)}}
+function prayTimes(ds,lat,lng,M,ramadan){
+  const [y,m,d]=ds.split('-').map(Number),jd=julian(y,m,d)-lng/(15*24);
+  const mid=t=>fixH(12-sunPos(jd+t).eqt);
+  const ang=(a,t,ccw)=>{const s=sunPos(jd+t),T=dacos((-dsin(a)-dsin(s.decl)*dsin(lat))/(dcos(s.decl)*dcos(lat)))/15;return mid(t)+(ccw?-T:T)};
+  const asr=t=>{const s=sunPos(jd+t);return ang(-dacot(1+dtan(Math.abs(lat-s.decl))),t)};
+  let T={fajr:5,sunrise:6,dhuhr:12,asr:13,maghrib:18,isha:18};
+  for(let i=0;i<2;i++){const p=k=>T[k]/24;
+    const N={fajr:ang(M.fajr,p('fajr'),true),sunrise:ang(0.833,p('sunrise'),true),dhuhr:mid(p('dhuhr')),asr:asr(p('asr')),maghrib:ang(0.833,p('maghrib'))};
+    N.isha=M.ishaMin?N.maghrib+(ramadan?120:M.ishaMin)/60:ang(M.isha,p('isha'));T=N}
+  const out={},adj=S.ibada.adj||{};
+  for(const k in T){const ms=Date.UTC(y,m-1,d)+(T[k]-lng/15)*3600e3+(adj[k]||0)*60000;out[k]=new Date(Math.round(ms/60000)*60000)}
+  return out;
+}
+const tfmt=d=>d.toLocaleTimeString('ar-EG',{hour:'numeric',minute:'2-digit'});
+function cityInfo(){const c=S.ibada.city;if(!c)return null;const row=(CITIES[c.country]||[]).find(x=>x[0]===c.name);return row?{country:c.country,name:row[0],lat:row[1],lng:row[2],M:METHOD[c.country]}:null}
+function timesFor(ds){const ci=cityInfo();if(!ci)return null;return prayTimes(ds,ci.lat,ci.lng,ci.M,hij(ds).m===9)}
+function nextPrayer(){const ci=cityInfo();if(!ci)return null;const now=new Date(),t=today();
+  const tt=timesFor(t);for(const [k,n] of PR)if(tt[k]>now)return{k,n,at:tt[k],times:tt};
+  const tm=timesFor(addDays(t,1));return{k:'fajr',n:'الفجر',at:tm.fajr,times:tt,tomorrow:true}}
+function untilTxt(d){const m=Math.max(0,Math.round((d-Date.now())/60000)),h=Math.floor(m/60),mm=m%60;return h?`${h}:${String(mm).padStart(2,'0')}`:`${mm} دقيقة`}
+
+/* --- التاريخ الهجري --- */
+const HF=(()=>{try{return new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn',{year:'numeric',month:'numeric',day:'numeric'})}catch(e){return null}})();
+const hcache=new Map();
+function hij(ds){const k=ds+'|'+(S.ibada.hadj||0);if(hcache.has(k))return hcache.get(k);
+  let r={y:0,m:0,d:0};if(HF){const dt=new Date(ds+'T12:00');dt.setDate(dt.getDate()+(S.ibada.hadj||0));const o={};HF.formatToParts(dt).forEach(p=>o[p.type]=p.value);r={y:parseInt(o.year),m:+o.month,d:+o.day}}
+  hcache.set(k,r);return r}
+const htxt=h=>h.m?`${h.d} ${HMONTHS[h.m-1]} ${h.y} هـ`:'';
+
+/* --- السجلات --- */
+function weekKey(ds){const g=new Date(ds+'T12:00').getDay();return addDays(ds,-((g+1)%7))}
+function logOf(sc,ds){const I=S.ibada,h=hij(ds);
+  const [store,key]=sc==='d'?['log',ds]:sc==='w'?['wlog',weekKey(ds)]:sc==='m'?['mlog',h.y+'-'+h.m]:['ylog',String(h.y)];
+  I[store]=I[store]||{};return I[store][key]=I[store][key]||{}}
+function peek(sc,ds,id){const I=S.ibada,h=hij(ds);const [store,key]=sc==='d'?['log',ds]:sc==='w'?['wlog',weekKey(ds)]:sc==='m'?['mlog',h.y+'-'+h.m]:['ylog',String(h.y)];return ((I[store]||{})[key]||{})[id]}
+function countInHMonth(ds,id,fromDay){const h=hij(ds);let n=0;for(let i=0;i<31;i++){const d=addDays(ds,-i),x=hij(d);if(x.m!==h.m||x.y!==h.y||(fromDay&&x.d<fromDay))break;if(peek('d',d,id))n++}return n}
+
+/* --- عبادات خاصة بالنهارده حسب اليوم والتاريخ الهجري --- */
+function specials(ds){
+  const h=hij(ds),wd=new Date(ds+'T12:00').getDay(),out=[];
+  const eid=(h.m===10&&h.d===1)||(h.m===12&&h.d>=10&&h.d<=13);
+  const ram=h.m===9;
+  if(ram){out.push(['ramFast','صيام رمضان','','d'],['taraweeh','صلاة التراويح','','d']);
+    if(h.d>=21)out.push(['qadr','تحرّي ليلة القدر','العشر الأواخر: اجتهد في القيام والدعاء','d']);
+    if(h.d>=25)out.push(['fitr','زكاة الفطر','قبل صلاة العيد','y'])}
+  if(wd===5)out.push(['kahf','سورة الكهف','','d'],['ghusl','غسل الجمعة','','d'],['early','التبكير لصلاة الجمعة','','d'],['jdua','الدعاء آخر ساعة بعد العصر','ساعة الإجابة','d']);
+  if(!ram&&!eid&&(wd===1||wd===4))out.push(['fastMT','صيام '+(wd===1?'الاثنين':'الخميس'),'سنة','d']);
+  if(!ram&&!eid&&h.d>=13&&h.d<=15)out.push(['beed','صيام الأيام البيض',`اليوم ${h.d} من الشهر الهجري`,'d']);
+  if(h.m===10&&h.d>=2){const n=countInHMonth(ds,'shawwal',2);if(n<6||peek('d',ds,'shawwal'))out.push(['shawwal','صيام الست من شوال',`صمت ${n} من 6`,'d'])}
+  if(h.m===12&&h.d<=8)out.push(['dhFast','صيام العشر من ذي الحجة',`اليوم ${h.d}`,'d']);
+  if(h.m===12&&h.d===9)out.push(['arafa','صيام يوم عرفة','يكفّر سنة ماضية وسنة باقية','d']);
+  if(h.m===12&&h.d<=13)out.push(['takbir','التكبير','أيام العشر والتشريق','d']);
+  if(h.m===12&&h.d>=10&&h.d<=13)out.push(['udhiya','الأضحية','','y']);
+  if(h.m===1&&h.d===9)out.push(['tasua','صيام تاسوعاء','','d']);
+  if(h.m===1&&h.d===10)out.push(['ashura','صيام عاشوراء','يكفّر سنة ماضية','d']);
+  const z=S.ibada.zakat;if(z&&z.m){const left=daysToH(ds,z.m,z.d);if(left<=15)out.push(['zakat','زكاة المال',left===0?'النهارده ميعاد الحول':`باقي ${left} يوم على الحول`,'y'])}
+  if(isPeriod(ds))return out.filter(x=>!['ramFast','taraweeh','fastMT','beed','shawwal','dhFast','arafa','tasua','ashura'].includes(x[0]));
+  return out;
+}
+function daysToH(ds,m,d){for(let i=0;i<400;i++){const x=hij(addDays(ds,i));if(x.m===m&&x.d===d)return i}return 999}
+let evCache=null;
+function events(){const t=today();if(evCache&&evCache.t===t+'|'+(S.ibada.hadj||0)+'|'+JSON.stringify(S.ibada.zakat||null))return evCache.v;
+  const want=[['beed',x=>x.d===13&&x.m!==9,'الأيام البيض'],['ram',x=>x.m===9&&x.d===1,'رمضان'],['fitrEid',x=>x.m===10&&x.d===1,'عيد الفطر'],
+    ['dh',x=>x.m===12&&x.d===1,'العشر من ذي الحجة'],['arafa',x=>x.m===12&&x.d===9,'يوم عرفة'],['adha',x=>x.m===12&&x.d===10,'عيد الأضحى'],['ashura',x=>x.m===1&&x.d===10,'عاشوراء']];
+  const z=S.ibada.zakat;if(z&&z.m)want.push(['zakat',x=>x.m===z.m&&x.d===z.d,'حول زكاة المال']);
+  const found={};for(let i=1;i<400&&Object.keys(found).length<want.length;i++){const ds=addDays(t,i),x=hij(ds);want.forEach(([k,f,n])=>{if(!found[k]&&f(x))found[k]={n,i,ds}})}
+  const v=Object.values(found).sort((a,b)=>a.i-b.i);evCache={t:t+'|'+(S.ibada.hadj||0)+'|'+JSON.stringify(S.ibada.zakat||null),v};return v}
+
+/* --- النسبة --- */
+function ibadaScore(ds){
+  const L=(S.ibada.log||{})[ds]||{};let tot=0,done=0;const pd=isPeriod(ds);
+  if(!pd)PR.forEach(([k])=>{tot++;if(L['p_'+k])done++});
+  DAILY.forEach(([k])=>{if(pd&&['rawatib','duha','witr','qiyam'].includes(k))return;tot++;if(L[k])done++});
+  COUNTERS.forEach(([k,,tg])=>{tot++;if((L[k]||0)>=tg)done++});
+  if(!pd){tot++;if((L.quran||0)>=(S.ibada.wird||5))done++}
+  specials(ds).forEach(([id,,,sc])=>{tot++;if(peek(sc,ds,id))done++});
+  return{tot,done,pct:Math.round(done/tot*100)};
+}
+
+/* --- العرض --- */
+function renderIbada(){
+  const t=today(),h=hij(t),L=(S.ibada.log||{})[t]||{},ci=cityInfo(),sc=ibadaScore(t);
+  $('ibSub').textContent=htxt(h);
+  let html='';
+  if(!ci)html+=`<button class="card citycta" data-open="sh-ibset"><span class="mi">🕌</span><span class="mt"><b>اختار مدينتك</b><small>عشان مواقيت الصلاة تطلع مظبوطة</small></span><span class="ma">←</span></button>`;
+  else{const np=nextPrayer();
+    html+=`<div class="card prcard"><div class="prtop"><div><small>الصلاة الجاية</small><b>${np.n} ${tfmt(np.at)}</b><em>بعد ${untilTxt(np.at)}</em></div><button class="soft" data-open="sh-ibset">📍 ${ci.name}</button></div>
+      <div class="prrow">${[['fajr','الفجر'],['sunrise','الشروق'],['dhuhr','الظهر'],['asr','العصر'],['maghrib','المغرب'],['isha','العشاء']].map(([k,n])=>`<div class="${!np.tomorrow&&k===np.k?'on':''}"><small>${n}</small><b>${tfmt(np.times[k]).replace(/\s?[صم]$/,'')}</b></div>`).join('')}</div>
+      <div class="hint">${ci.M.name} · بتوقيت جوالك</div></div>`}
+  html+=alertCard(ci);
+  html+=`<div class="card" style="flex-direction:column;align-items:stretch;gap:6px"><div class="blkhead"><b>عباداتي النهارده</b><span class="num" style="color:var(--ink);font-weight:700">${sc.pct}%</span></div><div class="bar" style="height:8px"><i style="width:${sc.pct}%"></i></div><div class="sub">${sc.done} من ${sc.tot}</div></div>`;
+  if(isPeriod(t))html+=`<div class="card perban">🌸 <div class="grow"><b>أيام عذر</b><div class="sub">الصلاة والصيام مش بيتحسبوا عليكي في النسبة. تقدري تكمّلي الأذكار والدعاء.</div></div></div>`;
+  const ql=qadaLeft();if(ql>0)html+=`<div class="card setrow"><div class="grow"><b>قضاء رمضان</b><div class="sub">${S.profile&&S.profile.gender==='f'?'عليكي':'عليك'} <b class="num">${ql}</b> ${ql>10?'يوم':'أيام'}</div></div><button class="soft" data-qd="1">+ صمت يوم</button></div>`;
+  // الصلوات
+  html+=`<div class="sec"><span>الصلوات</span></div><div class="prayers">${PR.map(([k,n])=>`<button class="pchip ${L['p_'+k]?'on':''}" data-ib="p_${k}" data-sc="d" aria-pressed="${!!L['p_'+k]}"><span>${L['p_'+k]?'✓':''}</span>${n}</button>`).join('')}</div>`;
+  // الخاص بالنهارده
+  const sp=specials(t);
+  if(sp.length)html+=`<div class="sec"><span>خاص بالنهارده</span></div><ul class="list">${sp.map(([id,n,note,s])=>ibLi(id,n,note,s,t)).join('')}</ul>`;
+  // السنن والأذكار
+  html+=`<div class="sec"><span>السنن والأذكار</span></div><ul class="list">${DAILY.map(([id,n,note])=>ibLi(id,n,note,'d',t)).join('')}</ul>`;
+  // القرآن
+  const q=L.quran||0,w=S.ibada.wird||5,kp=S.ibada.khatma||0;
+  html+=`<div class="sec"><span>القرآن</span></div><div class="card" style="flex-direction:column;align-items:stretch;gap:10px">
+    <div class="blkhead"><div><b>ورد النهارده</b><div class="sub">${q} من ${w} صفحات ${q>=w?'✓':''}</div></div><div class="stepper"><button data-q="-1" aria-label="صفحة أقل">−</button><b class="num">${q}</b><button data-q="1" aria-label="صفحة زيادة">+</button></div></div>
+    <div class="bar"><i style="width:${Math.min(100,q/w*100)}%"></i></div>
+    <div class="sub">الختمة: وصلت صفحة <b class="num">${kp}</b> من 604${S.ibada.khatmas?` · ختمت ${S.ibada.khatmas} مرة`:''}</div><div class="bar"><i style="width:${kp/604*100}%;background:var(--ink-2)"></i></div>
+    <a class="primary qbtn" href="https://quran.com/page/${Math.min(604,kp+1)}" target="_blank" rel="noopener">📖 اقرأ وردك من صفحة ${Math.min(604,kp+1)}</a>
+    <div class="qsura"><select id="suraSel" aria-label="افتح سورة"><option value="">أو افتح سورة…</option>${SURAS.map((n,i)=>`<option value="${i+1}">${i+1}. ${n}</option>`).join('')}</select><a class="soft qgo" id="suraGo" href="#" target="_blank" rel="noopener" hidden>افتح ←</a></div>
+    <div class="hint" style="text-align:start">بيفتح مصحف المدينة على موقع Quran.com. لما تخلّص ارجع واضغط + بعدد الصفحات اللي قريتها.</div></div>`;
+  // العدّادات
+  html+=`<div class="counters">${COUNTERS.map(([id,n,tg])=>{const v=L[id]||0;return `<div class="card ctr ${v>=tg?'done':''}"><small>${n}</small><b class="num">${v}<span>/${tg}</span></b>
+    <div class="ctrbtns"><button data-c="${id}" data-n="1">+1</button><button data-c="${id}" data-n="10">+10</button></div></div>`}).join('')}</div>`;
+  // الأسبوع والشهر
+  const sadaqa=peek('m',t,'sadaqa'),rahim=peek('w',t,'rahim'),beed=countInHMonth(t,'beed',13);
+  html+=`<div class="sec"><span>الأسبوع ده والشهر ده</span></div><ul class="list">
+    ${ibLi('rahim','صلة الرحم','كلّم أهلك أو زورهم مرة في الأسبوع','w',t)}
+    ${ibLi('sadaqa','صدقة الشهر',`شهر ${HMONTHS[h.m-1]||''}`,'m',t)}
+    <li><div class="txt"><div class="t">صيام الأيام البيض</div><div class="when">${h.d<13?`تبدأ بعد ${13-h.d} يوم (13 و14 و15 ${HMONTHS[h.m-1]||''})`:h.d<=15?`صمت ${beed} من 3 الشهر ده`:`صمت ${beed} من 3 الشهر ده`}</div></div></li></ul>`;
+  // المناسبات
+  const ev=events().slice(0,5);
+  if(ev.length)html+=`<div class="sec"><span>المناسبات الجاية</span></div><ul class="list">${ev.map(e=>`<li><div class="txt"><div class="t">${e.n}</div><div class="when">${htxt(hij(e.ds))} · ${dname(e.ds,{weekday:'long',day:'numeric',month:'long'})}</div></div><span class="tag ${e.i<=7?'r':''}">${e.i===1?'بكرة':'بعد '+e.i+' يوم'}</span></li>`).join('')}</ul>`;
+  $('ibArea').innerHTML=html;
+  const ss=$('suraSel');if(ss)ss.onchange=()=>{const g=$('suraGo');g.hidden=!ss.value;if(ss.value){g.href='https://quran.com/'+ss.value;g.textContent='افتح '+SURAS[ss.value-1]+' ←'}};
+}
+function ibExtra(id){if(['am','pm','after','sleep'].includes(id)){const p=dkProgress(id);return `<button class="mini dkopen" data-adk="${id}">📿 ${p.d&&p.d<p.t?p.d+'/'+p.t:'اقرأ'}</button>`}
+  if(id==='kahf')return '<a class="mini dkopen" href="https://quran.com/18" target="_blank" rel="noopener">📖 اقرأ</a>';return ''}
+function ibLi(id,n,note,sc,ds){const on=!!peek(sc,ds,id);const ex=ibExtra(id);
+  return `<li class="${on?'done':''}"><button class="check" data-ib="${id}" data-sc="${sc}" aria-label="${on?'إلغاء':'تم'}">${on?'✓':''}</button><div class="txt"><div class="t">${n}</div>${note?`<div class="when">${note}</div>`:''}</div>${ex}</li>`}
+$('ibArea').onclick=e=>{const t=today(),L=logOf('d',t);
+  const ak=e.target.closest('[data-adk]');if(ak){openAdhkar(ak.dataset.adk);return}
+  const qd=e.target.closest('[data-qd]');if(qd){S.ibada.qada={...(S.ibada.qada||{}),done:((S.ibada.qada&&S.ibada.qada.done)||0)+1};save();renderIbada();toast('تقبّل الله 🤍');return}
+  const b=e.target.closest('[data-ib]');if(b){const o=logOf(b.dataset.sc,t),id=b.dataset.ib;if(o[id])delete o[id];else{o[id]=1;if(navigator.vibrate)try{navigator.vibrate(15)}catch(x){}}save();renderIbada();renderHome();return}
+  const q=e.target.closest('[data-q]');if(q){const d=+q.dataset.q;if(d<0&&!(L.quran>0))return;L.quran=(L.quran||0)+d;
+    let k=(S.ibada.khatma||0)+d;if(k>=604){k-=604;S.ibada.khatmas=(S.ibada.khatmas||0)+1;toast('🎉 مبروك، ختمت القرآن!')}if(k<0)k=0;S.ibada.khatma=k;save();renderIbada();return}
+  const c=e.target.closest('[data-c]');if(c){const id=c.dataset.c,tg=COUNTERS.find(x=>x[0]===id)[2],was=L[id]||0;L[id]=was+(+c.dataset.n);if(was<tg&&L[id]>=tg)toast('✓ كمّلت '+tg);save();renderIbada()}};
+
+
+/* --- تنبيه الصلاة على الجوال: ملف تقويم لسنة كاملة --- */
+function icsState(ci){const x=S.ibada.ics,t=today();
+  if(!x)return{st:'none'};
+  if(!ci||x.city!==ci.country+'/'+ci.name)return{st:'city',x};
+  const left=diffDays(t,x.until);if(left<0)return{st:'expired',x};if(left<=14)return{st:'soon',x,left};return{st:'ok',x,left}}
+function alertCard(ci){const s=icsState(ci);
+  if(s.st==='ok')return `<div class="card alertok"><span class="mi">🔔</span><div class="grow"><b>تنبيه الصلاة شغال</b><div class="sub">لحد ${dname(s.x.until,{day:'numeric',month:'long',year:'numeric'})}${s.x.offset?` · قبل الأذان بـ ${s.x.offset} دقايق`:' · في وقت الأذان'}</div></div><button class="tiny" data-open="sh-ics">تغيير</button></div>`;
+  const msg={none:['🔔 خلي الجوال ينبّهك بكل صلاة','مرة واحدة في السنة، حتى والبرنامج مقفول'],
+    city:['📍 غيّرت مدينتك','حمّل مواقيت المدينة الجديدة عشان التنبيه يبقى مظبوط'],
+    soon:['⏳ مواقيت السنة قربت تخلص',`فاضل ${s.left} يوم، حمّل مواقيت السنة الجديدة`],
+    expired:['⚠️ تنبيه الصلاة وقف','مواقيت السنة خلصت، حمّل السنة الجديدة']}[s.st];
+  return `<button class="card citycta ${s.st!=='none'?'warnc':''}" data-open="sh-ics"><span class="mt"><b>${msg[0]}</b><small>${msg[1]}</small></span><span class="ma">←</span></button>`}
+function buildICS(ci,offset){
+  const pad=n=>String(n).padStart(2,'0'),z=d=>`${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00Z`;
+  const t=today(),now=z(new Date()),L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Rafiq//Prayer Times//AR','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:مواقيت الصلاة - '+ci.name];
+  for(let i=0;i<365;i++){const ds=addDays(t,i),tt=timesFor(ds);
+    PR.forEach(([k,n])=>{const st=tt[k],en=new Date(st.getTime()+10*60000);
+      L.push('BEGIN:VEVENT','UID:'+ds+'-'+k+'@yawmi','DTSTAMP:'+now,'DTSTART:'+z(st),'DTEND:'+z(en),'SUMMARY:🕌 صلاة '+n,'DESCRIPTION:'+ci.name+' · من برنامج رفيق','TRANSP:TRANSPARENT',
+        'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+(offset?`صلاة ${n} بعد ${offset} دقايق`:`حان وقت صلاة ${n}`),'TRIGGER:'+(offset?`-PT${offset}M`:'PT0M'),'END:VALARM','END:VEVENT')})}
+  L.push('END:VCALENDAR');return L.join('\r\n')}
+let icsOffset=0;
+let DLCAP;async function dlCap(){if(DLCAP===undefined){try{DLCAP=await Promise.resolve(NATIVE_DL)||null}catch(e){DLCAP=null}}return DLCAP}
+async function setIcsMode(){const dl=await dlCap(),ci=cityInfo(),no=!dl;
+  ['icsGo'].forEach(x=>$(x).hidden=no);$('icsOff').closest('.field').hidden=no;$('sh-ics').querySelector('.steps').hidden=no;
+  $('icsNo').hidden=!no;$('icsMeth').textContent=ci?ci.M.name:'حسب بلدك'}
+function fillIcs(){setIcsMode();const ci=cityInfo();icsOffset=(S.ibada.ics&&S.ibada.ics.offset)||0;
+  $('icsCity').textContent=ci?`${ci.name} · ${ci.M.name}`:'اختار مدينتك الأول من إعدادات عباداتي';
+  [...$('icsOff').querySelectorAll('.chip')].forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===icsOffset));
+  $('icsGo').disabled=!ci;$('icsMsg').textContent=''}
+$('icsOff').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;icsOffset=+b.dataset.v;[...$('icsOff').querySelectorAll('.chip')].forEach(x=>x.setAttribute('aria-pressed',x===b))};
+$('icsGo').onclick=async()=>{const ci=cityInfo();if(!ci)return;
+  let dl=null;try{dl=await Promise.resolve(NATIVE_DL)}catch(e){}
+  if(!dl){$('icsMsg').textContent='الملف ماتحفظش. جرّب تاني.';return}
+  $('icsGo').disabled=true;$('icsGo').textContent='جاري التجهيز…';
+  try{const data=new Blob([buildICS(ci,icsOffset)],{type:'text/calendar'});
+    await dl.save({filename:'مواقيت-الصلاة-'+ci.name+'.ics',data});
+    S.ibada.ics={city:ci.country+'/'+ci.name,from:today(),until:addDays(today(),364),offset:icsOffset};save();
+    closeSheet();renderIbada();toast('افتح الملف من التنزيلات وضيفه للتقويم ✓')}
+  catch(e){$('icsMsg').textContent='الملف ماتحفظش. جرّب تاني.'}
+  finally{$('icsGo').disabled=false;$('icsGo').textContent='حمّل ملف مواقيت السنة'}};
+
+/* --- إعدادات عباداتي --- */
+function fillIbset(){
+  const c=S.ibada.city||{};
+  $('ibCountry').innerHTML=Object.keys(CITIES).map(k=>`<option ${k===c.country?'selected':''}>${k}</option>`).join('');
+  const fillCity=()=>{const k=$('ibCountry').value;$('ibCity').innerHTML=CITIES[k].map(r=>`<option ${r[0]===c.name?'selected':''}>${r[0]}</option>`).join('');$('ibMethod').textContent='طريقة الحساب: '+METHOD[k].name};
+  $('ibCountry').onchange=fillCity;fillCity();
+  $('ibWird').value=S.ibada.wird||5;$('ibKhatma').value=S.ibada.khatma||0;
+  const z=S.ibada.zakat||{};$('ibZm').innerHTML='<option value="">مش محدد</option>'+HMONTHS.map((n,i)=>`<option value="${i+1}" ${z.m===i+1?'selected':''}>${n}</option>`).join('');
+  $('ibZd').innerHTML=[...Array(30)].map((_,i)=>`<option ${z.d===i+1?'selected':''}>${i+1}</option>`).join('');
+  $('ibHadj').value=String(S.ibada.hadj||0);$('ibQada').value=(S.ibada.qada&&S.ibada.qada.manual)||0;
+  const a=S.ibada.adj||{};$('ibAdj').innerHTML=PR.map(([k,n])=>`<div class="field"><label for="adj_${k}">${n}</label><select id="adj_${k}">${[-5,-4,-3,-2,-1,0,1,2,3,4,5].map(v=>`<option value="${v}" ${(a[k]||0)===v?'selected':''}>${v>0?'+'+v:v} د</option>`).join('')}</select></div>`).join('');
+}
+$('fIbset').onsubmit=e=>{e.preventDefault();const I=S.ibada;
+  I.city={country:$('ibCountry').value,name:$('ibCity').value};I.wird=Math.max(1,parseInt($('ibWird').value)||5);
+  I.khatma=Math.min(603,Math.max(0,parseInt($('ibKhatma').value)||0));
+  const zm=parseInt($('ibZm').value);I.zakat=zm?{m:zm,d:parseInt($('ibZd').value)}:null;
+  I.hadj=parseInt($('ibHadj').value)||0;I.qada={...(I.qada||{}),manual:Math.max(0,parseInt($('ibQada').value)||0)};I.adj={};PR.forEach(([k])=>{const v=parseInt($('adj_'+k).value)||0;if(v)I.adj[k]=v});
+  if(I.city.country==='مصر'&&S.cur==='SAR'&&!S.exps.length&&!S.subs.length)S.cur='EGP';
+  if(I.city.country==='السعودية'&&S.cur==='EGP'&&!S.exps.length&&!S.subs.length)S.cur='SAR';
+  hcache.clear();evCache=null;closeSheet();save();renderAll();toast('اتحفظت الإعدادات ✓')};
+
+
+/* ================= الشرح ================= */
+const HELP=[
+ ['home','⌂','الرئيسية',['فوق هتلاقي التحية باسمك، وتاريخ النهارده بالميلادي والهجري.','كارت <b>الصلاة الجاية</b> بيوريك الصلاة الجاية والوقت الفاضل عليها. اضغطه يفتحلك عباداتي.','<b>التقرير:</b> 4 مربعات (المهام، العادات، مصروف الشهر، أقرب دفعة). أي مربع تضغطه بيفتح قسمه.','<b>محتاج انتباهك:</b> بيظهر لما يكون فيه تذكير حان وقته أو قسط قرّب. اضغط "تم" أو "بكرة" أو "للمهام".','<b>مهام النهارده:</b> أهم 3 مهام. اضغط المربع جنب المهمة عشان تعلّم إنها خلصت.','زرار <b>"+ إضافة"</b> تحت: بيسألك تضيف إيه (مهمة، مصروف، رسالة بنك، تذكير، قسط، ملاحظة).','جوه أي قسم: <b>"→ الرئيسية"</b> يرجعك هنا، و<b>"☰ الأقسام"</b> ينقلك لأي قسم على طول.']],
+ ['ibada','🕌','عباداتي ومواقيت الصلاة',['أول مرة: اضغط <b>"اختار مدينتك"</b> أو زرار ⚙، واختار البلد والمدينة. المواقيت هتتحسب لوحدها.','علّم على كل <b>صلاة</b> بعد ما تصليها، وعلى السنن والأذكار.','<b>"خاص بالنهارده"</b> بيتغير لوحده: الجمعة، الاثنين والخميس، الأيام البيض، رمضان، عرفة…','<b>ورد القرآن:</b> اضغط "📖 اقرأ وردك" يفتحلك المصحف من الصفحة اللي وقفت عندها. لما تخلّص ارجع واضغط <b>+</b> بعدد الصفحات.','<b>الاستغفار والصلاة على النبي ﷺ:</b> اضغط +1 أو +10.','<b>تنبيه الصلاة على الجوال:</b> اضغط كارت 🔔، اختار امتى ينبّهك، واضغط "حمّل ملف مواقيت السنة". افتح الملف من التنزيلات: الآيفون "إضافة الكل"، والأندرويد افتحه بتقويم جوجل. مرة واحدة في السنة بس.','من ⚙ تقدر تظبط دقايق المواقيت على مسجدك، والتاريخ الهجري يوم زيادة أو أقل، وميعاد حول الزكاة.']],
+ ['adhkar','📿','الأذكار',['اختار من فوق: الصباح، المساء، بعد الصلاة، النوم.','اقرأ الذكر واضغط على <b>العدّاد</b> مع كل مرة. لما يكمل بينزل تحت، واللي بعده يطلع.','لما تخلّص كلهم، بيتعلّم عليهم "تم" لوحده في عباداتي.','العدّاد بيبدأ من الأول كل يوم. ولو عايز تعيد، اضغط "ابدأ من الأول".','<b>ذكّرني بالذكر:</b> في آخر الصفحة. اختار الذكر وكل قد إيه، وحمّل الملف وضيفه للتقويم مرة واحدة.']],
+ ['fad','🤍','فضفضة',['أول مرة: اختار <b>رقم سري</b> من 4 لـ 6 أرقام واكتبه مرتين. <b>احفظه كويس</b>، لو نسيته الكلام مش هيتفتح أبداً.','<b>✍️ اكتب:</b> اكتب اللي جواك. ولو عايز تتكلم بدل الكتابة، اضغط زرار <b>المايك 🎤 في كيبورد الجوال</b> واتكلم، وهو يكتب.','<b>📲 ثبّت رفيق على الشاشة:</b> من الإعدادات، أو من قائمة المتصفح: الأندرويد "إضافة إلى الشاشة الرئيسية"، والآيفون زرار المشاركة ثم "إضافة إلى الشاشة الرئيسية".','<b>🎙 سجّل فويس:</b> بيفتح مسجّل الجوال أو الملفات. على الآيفون ممكن تسجّل الأول في "المذكرات الصوتية" وتختار التسجيل. التسجيلات بتتحفظ على الجوال ده بس.','فضفضة <b>بتتقفل لوحدها</b> لما تخرج منها أو تقفل الشاشة، أو اضغط "🔒 اقفل".','لو نسيت الرقم: اضغط "نسيت الرقم؟" وامسح فضفضة وابدأ برقم جديد.']],
+ ['period','🌸','دورتي',['بيظهر لو اخترتي "أنثى" (من الترحيب أو الإعدادات).','أول يوم الدورة اضغطي <b>"الدورة بدأت النهارده"</b>، وآخر يوم <b>"خلصت النهارده"</b>.','<b>"يوم تاني؟"</b> عشان تسجّلي دورات فاتت. كل ما تسجّلي أكتر، التوقع يبقى أدق.','كارت المرحلة بيوريكي انتي فين في الدورة، والتقويم بيلوّن أيام الدورة والمتوقعة وأيام الخصوبة.','سجّلي مزاجك والأعراض كل يوم.','في أيام العذر، الصلاة والصيام مش بيتحسبوا في عباداتي، وقضاء رمضان بيتعد لوحده.','تقدري تقفلي دورتي بنفس رقم فضفضة. والتوقعات تقريبية ومينفعش يتعتمد عليها في منع الحمل.']],
+ ['tasks','☑','المهام',['اضغط <b>"+ مهمة"</b>، اكتب المهمة، واختار: النهارده ولا بكرة، والأولوية، والنوع.','لما تخلّص مهمة، اضغط المربع اللي جنبها.','أي مهمة مخلصتهاش <b>بتتنقل لبكرة لوحدها</b>، ومكتوب عليها مرحّلة من كام يوم.','"أجّل لبكرة" تنقل المهمة لبكرة، و"خليها النهارده" ترجّعها.','الأسهم فوق بتوديك للأيام اللي فاتت تشوف عملت إيه.']],
+ ['money','💵','المصاريف',['اضغط <b>"+ مصروف"</b>، اكتب المبلغ واختار الفئة.','<b>رسالة البنك:</b> انسخ رسالة البنك من الرسايل، واضغط "الصق رسالة البنك"، والصقها واضغط "اقرأ". راجع المبلغ والفئة واضغط "سجّل". تقدر تلصق كذا رسالة مرة واحدة (سيب سطر فاضي بينهم).','<b>الميزانية:</b> اكتب رقمها فوق، والبرنامج يقولك فاضلك قد إيه.','الأسهم فوق بتنقلك بين الشهور. والعملة بتتغير من الإعدادات.']],
+ ['rem','⏰','التذكيرات',['اضغط <b>"+ تذكير"</b>، اكتب الحاجة واختار امتى (بعد ساعة، بكرة، أسبوع…) أو حدد الميعاد بالظبط.','عشان <b>الجوال ينبّهك والبرنامج مقفول</b>: اضغط "📅 أضف للتقويم" تحت التذكير واحفظه.','لما ييجي الميعاد، التذكير بيظهر في الرئيسية: "تم" أو "بكرة" أو "للمهام".']],
+ ['subs','🔁','الاشتراكات والأقساط',['اضغط <b>"+ اشتراك"</b>: الاسم، والمبلغ، وكل شهر ولا كل سنة، وميعاد الدفع الجاي.','البرنامج يفكرك قبل الميعاد بـ 3 أيام في الرئيسية.','لما تدفع اضغط <b>"اتدفع"</b>: بيتسجل في المصاريف والميعاد يتنقل للشهر اللي بعده.','"📅 أضف للتقويم" بيضيفه متكرر كل شهر، فالجوال ينبّهك.']],
+ ['habits','◎','العادات',['اضغط <b>"+ عادة"</b> واكتبها (مثلاً: مشي نص ساعة).','كل يوم علّم عليها. وتقدر تعلّم على أي يوم من آخر أسبوع من المربعات الصغيرة.','🔥 بيوريك عملتها كام يوم ورا بعض، والدايرة فوق نسبة النهارده.']],
+ ['goals','🎯','الأهداف',['اضغط <b>"+ هدف"</b>: اسم الهدف والرقم المطلوب والوحدة (ريال، كتاب…) والموعد لو حابب.','كل ما تتقدم، اكتب الرقم واضغط "سجّل تقدّم" أو "+1".']],
+ ['notes','✎','الملاحظات',['اضغط <b>"+ ملاحظة"</b> واكتب أي حاجة.','اضغط 📌 عشان تثبّت ملاحظة مهمة فوق.']],
+ ['settings','⚙','الإعدادات وحفظ البيانات',['غيّر <b>اسمك</b> و<b>الجنس</b> و<b>العملة</b> و<b>الوضع الليلي</b>.','<b>حفظ البيانات:</b> بياناتك بتتحفظ على الجوال ده بس. خد <b>نسخة كملف</b> كل فترة وابعتها لنفسك، عشان لو غيرت الجوال ترجّعها.','<b>احفظ نسخة كملف</b> عشان تحتفظ بنسخة احتياطية، و<b>رجّع نسخة</b> لو احتجتها.']]];
+let helpOpen='';
+function renderHelp(){
+  $('helpArea').innerHTML=HELP.filter(h=>h[0]!=='period'||isF()).map(([k,i,n,steps])=>`<details class="card hlp" id="hlp-${k}" ${k===helpOpen?'open':''}><summary><span class="mi">${i}</span><b>${n}</b><span class="ma">⌄</span></summary>
+    <ol class="steps">${steps.map(x=>`<li>${x}</li>`).join('')}</ol>${k!=='home'&&k!=='settings'?`<button class="soft" data-go="${k}" style="min-height:42px">افتح ${n} ←</button>`:''}</details>`).join('')
+   +`<div class="card hlp tipcard"><b>💡 نصيحة</b><div class="sub">لو حاجة مش واضحة، اضغط "❓ شرح" فوق في أي قسم، وهيفتحلك شرحه على طول.</div></div>`;
+  if(helpOpen){const el=$('hlp-'+helpOpen);if(el)setTimeout(()=>el.scrollIntoView({block:'start',behavior:'smooth'}),60)}
+}
+function openHelp(k){helpOpen=k||'';go('help')}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-help]');if(b)openHelp(b.dataset.help)});
+$('welcomeHelp').onclick=()=>{try{localStorage.setItem('yawmi-welcome','1')}catch(e){}if(wG)S.profile={...(S.profile||{}),gender:wG};setName($('wName').value);closeSheet();openHelp('home')};
+
+/* ================= الأذكار ================= */
+const BSM='بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ';
+const Q_KURSI='اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ';
+const Q_IKH=BSM+'\nقُلْ هُوَ اللَّهُ أَحَدٌ ﴿١﴾ اللَّهُ الصَّمَدُ ﴿٢﴾ لَمْ يَلِدْ وَلَمْ يُولَدْ ﴿٣﴾ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ ﴿٤﴾';
+const Q_FALAQ=BSM+'\nقُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ﴿١﴾ مِن شَرِّ مَا خَلَقَ ﴿٢﴾ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ﴿٣﴾ وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ﴿٤﴾ وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ ﴿٥﴾';
+const Q_NAS=BSM+'\nقُلْ أَعُوذُ بِرَبِّ النَّاسِ ﴿١﴾ مَلِكِ النَّاسِ ﴿٢﴾ إِلَٰهِ النَّاسِ ﴿٣﴾ مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ﴿٤﴾ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ﴿٥﴾ مِنَ الْجِنَّةِ وَالنَّاسِ ﴿٦﴾';
+const Q_BAQ_END='آمَنَ الرَّسُولُ بِمَا أُنزِلَ إِلَيْهِ مِن رَّبِّهِ وَالْمُؤْمِنُونَ ۚ كُلٌّ آمَنَ بِاللَّهِ وَمَلَائِكَتِهِ وَكُتُبِهِ وَرُسُلِهِ لَا نُفَرِّقُ بَيْنَ أَحَدٍ مِّن رُّسُلِهِ ۚ وَقَالُوا سَمِعْنَا وَأَطَعْنَا ۖ غُفْرَانَكَ رَبَّنَا وَإِلَيْكَ الْمَصِيرُ ﴿٢٨٥﴾ لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا ۚ لَهَا مَا كَسَبَتْ وَعَلَيْهَا مَا اكْتَسَبَتْ ۗ رَبَّنَا لَا تُؤَاخِذْنَا إِن نَّسِينَا أَوْ أَخْطَأْنَا ۚ رَبَّنَا وَلَا تَحْمِلْ عَلَيْنَا إِصْرًا كَمَا حَمَلْتَهُ عَلَى الَّذِينَ مِن قَبْلِنَا ۚ رَبَّنَا وَلَا تُحَمِّلْنَا مَا لَا طَاقَةَ لَنَا بِهِ ۖ وَاعْفُ عَنَّا وَاغْفِرْ لَنَا وَارْحَمْنَا ۚ أَنتَ مَوْلَانَا فَانصُرْنَا عَلَى الْقَوْمِ الْكَافِرِينَ ﴿٢٨٦﴾';
+// [النص, العدد, الفضل, المصدر, قرآن؟]
+const MUAWW=[[Q_IKH,3,'من قالها حين يصبح وحين يمسي ثلاث مرات كفته من كل شيء','رواه أبو داود والترمذي',1],[Q_FALAQ,3,'','',1],[Q_NAS,3,'','',1]];
+const ADHKAR={
+ am:{name:'أذكار الصباح',icon:'🌅',items:[
+  ['أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ\n'+Q_KURSI,1,'من قالها حين يصبح أُجير من الجن حتى يمسي','رواه الحاكم',1],
+  ...MUAWW,
+  ['أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ',1,'','رواه مسلم'],
+  ['اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ',1,'','رواه الترمذي'],
+  ['اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',1,'سيد الاستغفار: من قاله موقناً به فمات من يومه قبل أن يمسي فهو من أهل الجنة','رواه البخاري'],
+  ['أَصْبَحْنَا عَلَى فِطْرَةِ الْإِسْلَامِ، وَعَلَى كَلِمَةِ الْإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا، وَمَا كَانَ مِنَ الْمُشْرِكِينَ',1,'','رواه أحمد'],
+  ['اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَهَ إِلَّا أَنْتَ',3,'','رواه أبو داود'],
+  ['اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي، وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ، وَمِنْ خَلْفِي، وَعَنْ يَمِينِي، وَعَنْ شِمَالِي، وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي',1,'','رواه أبو داود وابن ماجه'],
+  ['اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ، فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءًا، أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ',1,'','رواه أبو داود والترمذي'],
+  ['بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ، وَهُوَ السَّمِيعُ الْعَلِيمُ',3,'من قالها ثلاثاً لم يضره شيء','رواه أبو داود والترمذي'],
+  ['رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ ﷺ نَبِيًّا',3,'كان حقاً على الله أن يرضيه يوم القيامة','رواه أبو داود والترمذي'],
+  ['يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ',1,'','رواه النسائي والحاكم'],
+  ['حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ، عَلَيْهِ تَوَكَّلْتُ، وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ',7,'كفاه الله ما أهمّه','رواه أبو داود'],
+  ['سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ',3,'','رواه مسلم'],
+  ['اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلًا مُتَقَبَّلًا',1,'','رواه ابن ماجه'],
+  ['لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',10,'','رواه النسائي'],
+  ['سُبْحَانَ اللَّهِ وَبِحَمْدِهِ',100,'لم يأتِ أحد يوم القيامة بأفضل مما جاء به إلا أحد قال مثل ما قال أو زاد عليه','رواه مسلم'],
+  ['أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ',100,'','رواه البخاري ومسلم'],
+  ['اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ',10,'','رواه الطبراني']]},
+ pm:{name:'أذكار المساء',icon:'🌙',items:[
+  ['أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ\n'+Q_KURSI,1,'من قالها حين يمسي أُجير من الجن حتى يصبح','رواه الحاكم',1],
+  ...MUAWW,
+  ['أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ',1,'','رواه مسلم'],
+  ['اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ',1,'','رواه الترمذي'],
+  ['اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',1,'سيد الاستغفار: من قاله موقناً به فمات من ليلته قبل أن يصبح فهو من أهل الجنة','رواه البخاري'],
+  ['أَمْسَيْنَا عَلَى فِطْرَةِ الْإِسْلَامِ، وَعَلَى كَلِمَةِ الْإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا، وَمَا كَانَ مِنَ الْمُشْرِكِينَ',1,'','رواه أحمد'],
+  ['اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَهَ إِلَّا أَنْتَ',3,'','رواه أبو داود'],
+  ['اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي، وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ، وَمِنْ خَلْفِي، وَعَنْ يَمِينِي، وَعَنْ شِمَالِي، وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي',1,'','رواه أبو داود وابن ماجه'],
+  ['اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ، فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءًا، أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ',1,'','رواه أبو داود والترمذي'],
+  ['بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ، وَهُوَ السَّمِيعُ الْعَلِيمُ',3,'من قالها ثلاثاً لم يضره شيء','رواه أبو داود والترمذي'],
+  ['رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ ﷺ نَبِيًّا',3,'كان حقاً على الله أن يرضيه يوم القيامة','رواه أبو داود والترمذي'],
+  ['يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ',1,'','رواه النسائي والحاكم'],
+  ['حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ، عَلَيْهِ تَوَكَّلْتُ، وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ',7,'كفاه الله ما أهمّه','رواه أبو داود'],
+  ['أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ',3,'','رواه مسلم'],
+  ['سُبْحَانَ اللَّهِ وَبِحَمْدِهِ',100,'لم يأتِ أحد يوم القيامة بأفضل مما جاء به إلا أحد قال مثل ما قال أو زاد عليه','رواه مسلم'],
+  ['اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ',10,'','رواه الطبراني']]},
+ after:{name:'أذكار بعد الصلاة',icon:'🕌',items:[
+  ['أَسْتَغْفِرُ اللَّهَ',3,'','رواه مسلم'],
+  ['اللَّهُمَّ أَنْتَ السَّلَامُ، وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ',1,'','رواه مسلم'],
+  ['لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، اللَّهُمَّ لَا مَانِعَ لِمَا أَعْطَيْتَ، وَلَا مُعْطِيَ لِمَا مَنَعْتَ، وَلَا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ',1,'','رواه البخاري ومسلم'],
+  ['سُبْحَانَ اللَّهِ',33,'','رواه مسلم'],['الْحَمْدُ لِلَّهِ',33,'',''],['اللَّهُ أَكْبَرُ',33,'',''],
+  ['لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',1,'تمام المائة: غُفرت خطاياه وإن كانت مثل زبد البحر','رواه مسلم'],
+  ['أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ\n'+Q_KURSI,1,'من قرأها دبر كل صلاة مكتوبة لم يمنعه من دخول الجنة إلا أن يموت','رواه النسائي',1],
+  [Q_IKH,1,'','رواه أبو داود',1],[Q_FALAQ,1,'','',1],[Q_NAS,1,'','',1],
+  ['اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ، وَشُكْرِكَ، وَحُسْنِ عِبَادَتِكَ',1,'','رواه أبو داود']]},
+ sleep:{name:'أذكار النوم',icon:'😴',items:[
+  ['أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ\n'+Q_KURSI,1,'لن يزال عليك من الله حافظ، ولا يقربك شيطان حتى تصبح','رواه البخاري',1],
+  [Q_IKH,3,'يجمع كفيه وينفث فيهما ويقرأ، ثم يمسح بهما ما استطاع من جسده','رواه البخاري',1],[Q_FALAQ,3,'','',1],[Q_NAS,3,'','',1],
+  ['أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ\n'+Q_BAQ_END,1,'آخر آيتين من سورة البقرة: من قرأهما في ليلة كفتاه','رواه البخاري ومسلم',1],
+  ['بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي، وَبِكَ أَرْفَعُهُ، فَإِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا، وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ',1,'','رواه البخاري ومسلم'],
+  ['اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ',3,'','رواه أبو داود'],
+  ['بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا',1,'','رواه البخاري'],
+  ['سُبْحَانَ اللَّهِ',33,'','رواه البخاري ومسلم'],['الْحَمْدُ لِلَّهِ',33,'',''],['اللَّهُ أَكْبَرُ',34,'','']]}
+};
+const SURAS='الفاتحة البقرة آل_عمران النساء المائدة الأنعام الأعراف الأنفال التوبة يونس هود يوسف الرعد إبراهيم الحجر النحل الإسراء الكهف مريم طه الأنبياء الحج المؤمنون النور الفرقان الشعراء النمل القصص العنكبوت الروم لقمان السجدة الأحزاب سبأ فاطر يس الصافات ص الزمر غافر فصلت الشورى الزخرف الدخان الجاثية الأحقاف محمد الفتح الحجرات ق الذاريات الطور النجم القمر الرحمن الواقعة الحديد المجادلة الحشر الممتحنة الصف الجمعة المنافقون التغابن الطلاق التحريم الملك القلم الحاقة المعارج نوح الجن المزمل المدثر القيامة الإنسان المرسلات النبأ النازعات عبس التكوير الانفطار المطففين الانشقاق البروج الطارق الأعلى الغاشية الفجر البلد الشمس الليل الضحى الشرح التين العلق القدر البينة الزلزلة العاديات القارعة التكاثر العصر الهمزة الفيل قريش الماعون الكوثر الكافرون النصر المسد الإخلاص الفلق الناس'.split(' ').map(x=>x.replace('_',' '));
+
+let dkSet='am';
+function dkLog(set){const L=logOf('d',today());L['dk_'+set]=L['dk_'+set]||{};return L['dk_'+set]}
+function dkProgress(set){const it=ADHKAR[set].items,c=((S.ibada.log||{})[today()]||{})['dk_'+set]||{};let d=0;it.forEach((x,i)=>{if((c[i]||0)>=x[1])d++});return{d,t:it.length}}
+function openAdhkar(set){dkSet=set||(new Date().getHours()<14?'am':'pm');go('adhkar')}
+function renderAdhkar(){
+  const set=ADHKAR[dkSet],c=dkLog(dkSet),pr=dkProgress(dkSet);
+  $('dkTitle').textContent=set.icon+' '+set.name;
+  $('dkSets').innerHTML=Object.entries(ADHKAR).map(([k,v])=>{const p=dkProgress(k);return `<button class="chip" data-dk="${k}" aria-pressed="${k===dkSet}">${v.name.replace('أذكار ','')}${p.d===p.t?' ✓':''}</button>`}).join('');
+  const order=set.items.map((x,i)=>({x,i,done:(c[i]||0)>=x[1]})).sort((a,b)=>a.done-b.done||a.i-b.i);
+  $('dkArea').innerHTML=`<div class="card" style="flex-direction:column;align-items:stretch;gap:6px"><div class="blkhead"><b>${pr.d===pr.t?'كمّلت الأذكار، تقبّل الله 🤍':'قرأت '+pr.d+' من '+pr.t}</b><button class="tiny" data-dkreset="1">ابدأ من الأول</button></div><div class="bar" style="height:8px"><i style="width:${pr.d/pr.t*100}%"></i></div></div>
+   ${order.map(({x,i,done})=>{const n=c[i]||0;return `<div class="card dk ${done?'done':''}">
+     <div class="dktext ${x[4]?'quran':''}">${esc(x[0]).replace(/\n/g,'<br>')}</div>
+     ${x[2]||x[3]?`<div class="dkfadl">${x[2]?esc(x[2]):''}${x[2]&&x[3]?' · ':''}${x[3]?`<span>${x[3]}</span>`:''}</div>`:''}
+     <button class="dkbtn" data-dki="${i}" ${done?'disabled':''}><b class="num">${done?'✓':n}</b><span>${done?'تم':x[1]>1?'من '+x[1]+' · اضغط مع كل مرة':'اضغط لما تخلّص'}</span></button></div>`}).join('')}
+   <div class="card dkrem"><div class="grow"><b>⏰ ذكّرني بالذكر طول اليوم</b><div class="sub">الجوال يفكرك بذكر تختاره كل كام ساعة</div></div><button class="soft" data-open="sh-dkrem">ظبط</button></div>
+   <div class="hint">النصوص القرآنية برواية حفص عن عاصم، والأذكار من حصن المسلم.</div>`;
+}
+$('dkSets').onclick=e=>{const b=e.target.closest('[data-dk]');if(!b)return;dkSet=b.dataset.dk;renderAdhkar();window.scrollTo(0,0)};
+$('dkArea').onclick=e=>{
+  if(e.target.closest('[data-dkreset]')){const L=logOf('d',today());delete L['dk_'+dkSet];delete L[dkSet];save();renderAdhkar();return}
+  const b=e.target.closest('[data-dki]');if(!b)return;const i=+b.dataset.dki,it=ADHKAR[dkSet].items[i],c=dkLog(dkSet);
+  c[i]=Math.min(it[1],(c[i]||0)+1);try{navigator.vibrate&&navigator.vibrate(c[i]>=it[1]?30:8)}catch(x){}
+  const pr=dkProgress(dkSet);if(pr.d===pr.t){logOf('d',today())[dkSet]=1;toast('كمّلت '+ADHKAR[dkSet].name+'، تقبّل الله 🤍')}
+  save();
+  if(c[i]>=it[1])renderAdhkar();else{b.querySelector('b').textContent=c[i]}};
+/* التذكير الدوري */
+const DKREM=['سُبْحَانَ اللَّهِ وَبِحَمْدِهِ','أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ','اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ','لَا إِلَهَ إِلَّا اللَّهُ','لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ','سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَلَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ'];
+let dkPick=0,dkEvery=3;
+function fillDkrem(){$('dkrList').innerHTML=DKREM.map((d,i)=>`<button type="button" class="chip" data-r="${i}" aria-pressed="${i===dkPick}">${d}</button>`).join('');
+  [...$('dkrEvery').children].forEach(b=>b.setAttribute('aria-pressed',+b.dataset.e===dkEvery));$('dkrMsg').textContent='';
+  dlCap().then(dl=>{const no=!dl;$('dkrGo').hidden=no;$('dkrNo').hidden=!no;$('sh-dkrem').querySelector('.steps').hidden=no;$('dkrEvery').closest('.field').hidden=no})}
+$('dkrList').onclick=e=>{const b=e.target.closest('[data-r]');if(!b)return;dkPick=+b.dataset.r;fillDkrem()};
+$('dkrEvery').onclick=e=>{const b=e.target.closest('[data-e]');if(!b)return;dkEvery=+b.dataset.e;fillDkrem()};
+$('dkrGo').onclick=async()=>{let dl=null;try{dl=await Promise.resolve(NATIVE_DL)}catch(e){}
+  if(!dl){$('dkrMsg').textContent='الملف ماتحفظش. جرّب تاني.';return}
+  const pad=n=>String(n).padStart(2,'0'),d0=today().replace(/-/g,''),txt=DKREM[dkPick],L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Rafiq//Dhikr//AR','X-WR-CALNAME:تذكير بالذكر'];
+  for(let h=9;h<=21;h+=dkEvery){L.push('BEGIN:VEVENT','UID:dhikr-'+h+'@yawmi','DTSTAMP:'+d0+'T000000Z','DTSTART:'+d0+'T'+pad(h)+'0000','DTEND:'+d0+'T'+pad(h)+'0500','RRULE:FREQ=DAILY',
+    'SUMMARY:📿 '+txt,'TRANSP:TRANSPARENT','BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:📿 '+txt,'TRIGGER:PT0M','END:VALARM','END:VEVENT')}
+  L.push('END:VCALENDAR');
+  try{await dl.save({filename:'تذكير-بالذكر.ics',data:new Blob([L.join('\r\n')],{type:'text/calendar'})});closeSheet();toast('افتح الملف وضيفه للتقويم ✓')}
+  catch(e){$('dkrMsg').textContent='الملف ماتحفظش. جرّب تاني.'}};
+
+/* ================= فضفضة (مشفّرة بالرقم السري) ================= */
+const TE=new TextEncoder(),TD=new TextDecoder();
+function b64e(u8){let s='';for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s)}
+function b64d(s){const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+async function deriveKey(pin,salt){const base=await crypto.subtle.importKey('raw',TE.encode(pin),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:200000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function encBytes(key,u8){const iv=crypto.getRandomValues(new Uint8Array(12));return{iv,ct:new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},key,u8))}}
+async function encStr(key,str){const r=await encBytes(key,TE.encode(str));return{iv:b64e(r.iv),ct:b64e(r.ct)}}
+async function decStr(key,o){return TD.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(o.iv)},key,b64d(o.ct)))}
+/* تسجيلات الصوت: على الجهاز بس، مشفّرة */
+function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('yawmi-voice',1);r.onupgradeneeded=()=>r.result.createObjectStore('notes',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function idbPut(o){const db=await idb();return new Promise((res,rej)=>{const t=db.transaction('notes','readwrite');t.objectStore('notes').put(o);t.oncomplete=res;t.onerror=()=>rej(t.error)})}
+async function idbGet(id){const db=await idb();return new Promise((res,rej)=>{const q=db.transaction('notes').objectStore('notes').get(id);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}
+async function idbDel(id){const db=await idb();return new Promise(res=>{const t=db.transaction('notes','readwrite');t.objectStore('notes').delete(id);t.oncomplete=res;t.onerror=res})}
+async function idbClear(){try{const db=await idb();await new Promise(res=>{const t=db.transaction('notes','readwrite');t.objectStore('notes').clear();t.oncomplete=res;t.onerror=res})}catch(e){}}
+
+let FK=null,fadMode='list',fadCache=null,chatTurns=[],chatBusy=null;
+function lockAll(){FK=null;fadCache=null;chatTurns=[];if(chatBusy){try{chatBusy.abort()}catch(e){}chatBusy=null}fadMode='list'}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&FK){lockAll();if(curView==='fad'||curView==='period')renderLocked()}});
+function renderLocked(){if(curView==='fad')renderFad();if(curView==='period')renderPeriod()}
+const hasPin=()=>!!(S.fad&&S.fad.salt);
+
+/* شاشة الرقم السري — مشتركة بين فضفضة ودورتي */
+function lockHTML(forWhat){
+  if(!hasPin())return `<div class="card lockcard"><div class="lockico">🔒</div><b>اختار رقم سري</b>
+    <div class="sub">من 4 لـ 6 أرقام. ${forWhat} هيتقفل بيه، والكلام بيتشفّر بيه.</div>
+    <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" id="pin1" class="pinin" placeholder="••••" autocomplete="new-password">
+    <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" id="pin2" class="pinin" placeholder="اكتبه تاني" autocomplete="new-password">
+    <div class="warnbox">⚠️ احفظ الرقم كويس. لو نسيته، الكلام المتشفّر مش هيتفتح أبداً، ولا حتى مننا.</div>
+    <button class="primary" id="pinSet" type="button">حفظ الرقم</button><div class="hint" id="pinMsg" style="color:var(--danger)"></div></div>`;
+  return `<div class="card lockcard"><div class="lockico">🔒</div><b>${forWhat} مقفولة</b><div class="sub">اكتب الرقم السري</div>
+    <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" id="pinIn" class="pinin" placeholder="••••" autocomplete="current-password">
+    <button class="primary" id="pinGo" type="button">افتح</button><div class="hint" id="pinMsg" style="color:var(--danger)"></div>
+    <button class="tiny" data-open="sh-forgot" style="margin-top:6px">نسيت الرقم؟</button></div>`}
+function bindLock(after){
+  const set=$('pinSet'),go=$('pinGo'),msg=$('pinMsg');
+  if(set)set.onclick=async()=>{const a=$('pin1').value,b=$('pin2').value;
+    if(!/^\d{4,6}$/.test(a)){msg.textContent='الرقم لازم يكون من 4 لـ 6 أرقام';return}
+    if(a!==b){msg.textContent='الرقمين مش زي بعض';return}
+    set.disabled=true;const salt=crypto.getRandomValues(new Uint8Array(16)),key=await deriveKey(a,salt);
+    S.fad={...(S.fad||{}),salt:b64e(salt),check:await encStr(key,'yawmi-ok'),entries:(S.fad&&S.fad.entries)||[]};FK=key;fadCache=[];save();toast('اتحفظ الرقم السري 🔒');after()};
+  if(go){const tryOpen=async()=>{const v=$('pinIn').value;if(!v)return;go.disabled=true;
+      try{const key=await deriveKey(v,b64d(S.fad.salt));if(await decStr(key,S.fad.check)!=='yawmi-ok')throw 0;FK=key;fadCache=null;after()}
+      catch(e){msg.textContent='الرقم غلط';$('pinIn').value='';go.disabled=false}};
+    go.onclick=tryOpen;$('pinIn').onkeydown=e=>{if(e.key==='Enter')tryOpen()};setTimeout(()=>{try{$('pinIn').focus()}catch(e){}},50)}}
+
+async function loadFad(){if(fadCache)return fadCache;const out=[];
+  for(const e of (S.fad.entries||[])){if(e.type==='t'){try{out.push({...e,text:await decStr(FK,e)})}catch(x){out.push({...e,text:'(مش قادر أفتح الكتابة دي)'})}}else out.push(e)}
+  fadCache=out.sort((a,b)=>b.ts-a.ts);return fadCache}
+async function renderFad(){
+  const A=$('fadArea');$('fadLockBtn').hidden=!FK;
+  if(!FK){A.innerHTML=lockHTML('فضفضة');bindLock(renderFad);updateFab();return}
+  if(fadMode==='chat'){renderChat();return}
+  const list=await loadFad();if(!FK)return;
+  const fmtD=ts=>new Date(ts).toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'})+' · '+new Date(ts).toLocaleTimeString('ar-EG',{hour:'numeric',minute:'2-digit'});
+  A.innerHTML=`<div class="fadacts" style="grid-template-columns:1fr 1fr">
+      <button data-open="sh-fadw"><span>✍️</span><b>اكتب</b><small>وتقدر تتكلم وهو يكتب</small></button>
+      <button id="fadRec"><span>🎙</span><b>سجّل فويس</b><small>بمسجّل الجوال</small></button>
+</div>
+    <input type="file" id="fadFile" accept="audio/*" capture hidden>
+    ${list.length?`<div class="sec"><span>اللي فضفضت بيه (${list.length})</span></div><ul class="list">${list.map(e=>e.type==='t'
+      ?`<li><div class="txt"><div class="note fadtxt">${esc(e.text)}</div><div class="when">${fmtD(e.ts)}</div></div><button class="del" data-fdel="${e.id}" aria-label="حذف">×</button></li>`
+      :`<li><div class="txt"><div class="t">🎙 تسجيل صوتي ${e.dur?'· '+e.dur:''}</div><div class="when">${fmtD(e.ts)} · على الجهاز ده بس</div><div id="pl-${e.id}"></div></div><button class="mini" data-fplay="${e.id}">▶ اسمع</button><button class="del" data-fdel="${e.id}" aria-label="حذف">×</button></li>`).join('')}</ul>`
+     :`<div class="empty">ده مكانك. اكتب أو سجّل أي حاجة جواك، محدش هيشوفها غيرك 🤍</div>`}
+    ${S.fad.chat?`<div class="sec"><span>المحادثة</span></div><button class="smsbtn" id="fadChat2"><span>💬</span><span><b>كمّل المحادثة</b><small>محفوظة ومقفولة بالرقم السري</small></span><span>←</span></button>`:''}`;
+  $('fadRec').onclick=()=>$('fadFile').click();
+  $('fadFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f||!FK)return;
+    if(f.size>30*1024*1024){toast('التسجيل كبير أوي');return}
+    try{const buf=new Uint8Array(await f.arrayBuffer()),r=await encBytes(FK,buf),id=uid();
+      let dur='';try{const a=new Audio(URL.createObjectURL(f));await new Promise(res=>{a.onloadedmetadata=res;a.onerror=res;setTimeout(res,1500)});if(isFinite(a.duration)&&a.duration>0)dur=Math.floor(a.duration/60)+':'+String(Math.round(a.duration%60)).padStart(2,'0')}catch(x){}
+      await idbPut({id,iv:r.iv,ct:r.ct,mime:f.type||'audio/mp4'});
+      S.fad.entries.push({id,ts:Date.now(),type:'v',dur});fadCache=null;save();renderFad();toast('اتحفظ التسجيل 🔒')}
+    catch(x){toast('التسجيل ماتحفظش. جرّب تاني')}};
+  const c2=$('fadChat2');if(c2)c2.onclick=openChat;
+  updateFab();
+}
+$('fadArea').onclick=async e=>{
+  const d=e.target.closest('[data-fdel]');if(d){const id=d.dataset.fdel;
+    if(d.dataset.arm!=='1'){d.dataset.arm='1';d.textContent='متأكد؟';setTimeout(()=>{if(d.isConnected){d.dataset.arm='';d.textContent='×'}},3000);return}
+    const en=S.fad.entries.find(x=>x.id===id);S.fad.entries=S.fad.entries.filter(x=>x.id!==id);if(en&&en.type==='v')await idbDel(id);fadCache=null;save();renderFad();return}
+  const p=e.target.closest('[data-fplay]');if(p){const id=p.dataset.fplay,o=await idbGet(id).catch(()=>null);
+    if(!o){toast('التسجيل ده مش موجود على الجهاز ده');return}
+    try{const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:o.iv},FK,o.ct);const url=URL.createObjectURL(new Blob([pt],{type:o.mime}));
+      $('pl-'+id).innerHTML=`<audio controls src="${url}" style="width:100%;margin-top:6px"></audio>`;try{$('pl-'+id).querySelector('audio').play()}catch(x){}}
+    catch(x){toast('مش قادر أفتح التسجيل')}}};
+$('fFadw').onsubmit=async e=>{e.preventDefault();const v=$('fadwIn').value.trim();if(!v||!FK)return;
+  const o=await encStr(FK,v);S.fad.entries.push({id:uid(),ts:Date.now(),type:'t',...o});$('fadwIn').value='';fadCache=null;closeSheet();save();renderFad();toast('اتحفظ 🔒')};
+$('fadLockBtn').onclick=()=>{lockAll();renderFad();toast('اتقفلت 🔒')};
+$('forgotYes').onclick=async()=>{const keepChat=null;S.fad=null;lockAll();await idbClear();
+  if(S.period)S.period.lock=false;save();closeSheet();renderAll();toast('اتمسحت فضفضة. اختار رقم جديد')};
+
+/* --- المحادثة مع الذكاء الاصطناعي --- */
+async function openChat(){fadMode='chat';chatTurns=[];
+  if(S.fad.chat){try{chatTurns=JSON.parse(await decStr(FK,S.fad.chat))}catch(e){chatTurns=[]}}
+  renderChat();window.scrollTo(0,0)}
+function chatRules(){const p=S.profile||{},f=p.gender==='f';
+  return `انت "رفيق" جوه قسم الفضفضة في برنامج "رفيق". دورك تسمع وتطبطب زي صديق قريب وأمين.
+${p.name?`اسم ${f?'المستخدمة':'المستخدم'} ${p.name}.`:''} ${f?'خاطبها بصيغة المؤنث.':'خاطبه بصيغة المذكر.'}
+- اتكلم بالعامية المصرية البسيطة (أو بلهجة الشخص لو كتب بلهجة تانية)، بدفء وباختصار: من 2 لـ 5 جمل.
+- اسمع الأول واعكس إحساسه بكلامك، واسأل سؤال واحد بس يساعده يفضفض أكتر. متديش محاضرات ولا نصايح كتير إلا لو طلب.
+- لو مناسب، فكّره بلطف بمعنى إيماني يطمّن (رحمة ربنا، الصبر، الدعاء) من غير وعظ ولا حكم عليه.
+- انت مش دكتور ولا معالج نفسي، ومتدّعيش إنك إنسان.
+- لو الكلام فيه حزن شديد مستمر، أو أفكار عن إيذاء النفس أو الانتحار، أو خطر عليه أو على حد: رد بحنان وجدية، وشجّعه يكلم حد يثق فيه دلوقتي، أو دكتور أو مختص نفسي، ولو فيه خطر فوري يتصل بالطوارئ في بلده.`}
+function renderChat(){
+  const A=$('fadArea');
+  A.innerHTML=`<div class="chathead"><button class="soft" id="chatBack">→ رجوع لفضفضة</button>${chatTurns.length?'<button class="tiny" data-open="sh-chatclr">امسح المحادثة</button>':''}</div>
+    <div class="chat" id="chatBox">${chatTurns.length?'':`<div class="bub a">أنا سامعك ${S.profile&&S.profile.gender==='f'?'يا قمر':'يا صاحبي'} 🤍 قول اللي جواك، والكلام ده مقفول ومحدش هيشوفه غيرك.</div>`}
+      ${chatTurns.map(t=>`<div class="bub ${t.role==='user'?'u':'a'}">${esc(t.content)}</div>`).join('')}</div>
+    <div class="chatin"><textarea id="chatIn" rows="2" placeholder="اكتب… أو اضغط 🎤 في الكيبورد واتكلم"></textarea><button class="primary" id="chatSend">ابعت</button></div>
+    <div class="hint" id="chatNote">الرد من ذكاء اصطناعي، مش من شخص ولا دكتور.</div>`;
+  $('chatBack').onclick=()=>{fadMode='list';if(chatBusy){chatBusy.abort();chatBusy=null}renderFad()};
+  $('chatSend').onclick=sendChat;
+  const box=$('chatBox');box.scrollTop=box.scrollHeight;window.scrollTo(0,document.body.scrollHeight);
+  updateFab();
+}
+async function saveChat(){S.fad.chat=await encStr(FK,JSON.stringify(chatTurns.slice(-80)));save()}
+async function sendChat(){
+  if(chatBusy)return;const v=$('chatIn').value.trim();if(!v||!FK)return;
+  let sample=null;try{sample=await window.claude?.use?.('sample')}catch(e){}
+  if(!sample){$('chatNote').textContent='المحادثة محتاجة تكون داخل بحساب Claude. سجّل دخول وافتح البرنامج تاني.';return}
+  chatTurns.push({role:'user',content:v});$('chatIn').value='';renderChat();await saveChat();
+  const box=$('chatBox'),bub=document.createElement('div');bub.className='bub a typing';bub.textContent='بيكتب…';box.appendChild(bub);box.scrollTop=box.scrollHeight;
+  $('chatSend').textContent='وقّف';$('chatSend').onclick=()=>chatBusy&&chatBusy.abort();
+  chatBusy=new AbortController();
+  try{const turns=chatTurns.slice(-24);const {text}=await sample([{role:'user',content:chatRules()},{role:'assistant',content:'تمام، أنا سامع.'},...turns],
+      {cache:false,signal:chatBusy.signal,onText:({text})=>{bub.classList.remove('typing');bub.textContent=text;box.scrollTop=box.scrollHeight}});
+    if(!FK)return;chatTurns.push({role:'assistant',content:text});await saveChat()}
+  catch(e){if(!FK)return;
+    if(e&&e.text){chatTurns.push({role:'assistant',content:e.text});await saveChat()}
+    const msg={not_granted:'لازم توافق إن البرنامج يستخدم Claude عشان المحادثة تشتغل.',rate_limited:'استنى شوية وجرّب تاني.',cancelled:''}[e&&e.code];
+    chatBusy=null;renderChat();$('chatNote').textContent=msg===undefined?'حصلت مشكلة، جرّب تاني.':msg;return}
+  chatBusy=null;if(FK&&fadMode==='chat')renderChat()}
+$('chatClrYes').onclick=async()=>{chatTurns=[];if(S.fad){delete S.fad.chat;save()}closeSheet();if(FK)renderChat()};
+
+/* ================= دورتي ================= */
+const isF=()=>S.profile&&S.profile.gender==='f';
+const SYM=['تقلصات','صداع','تعب','انتفاخ','ألم ظهر','حب شباب','رغبة في الأكل','غثيان'];
+const MOOD=[['😊','كويسة'],['😐','عادي'],['😢','زعلانة'],['😠','متعصبة'],['😴','تعبانة']];
+function nDays(n){n=Math.abs(n);return n===1?'يوم واحد':n===2?'يومين':n<=10?n+' أيام':n+' يوم'}
+function P(){if(!S.period)S.period={cycles:[],log:{},lock:false};return S.period}
+function cycles(){return [...P().cycles].sort((a,b)=>a.start.localeCompare(b.start))}
+function cycEnd(c){if(c.end)return c.end;const t=today();return c.start>t?c.start:(diffDays(c.start,t)>14?addDays(c.start,14):t)}
+function isPeriod(ds){if(!isF())return false;return P().cycles.some(c=>c.start<=ds&&ds<=cycEnd(c))}
+function avgCycle(){const cs=cycles(),d=[];for(let i=1;i<cs.length;i++){const x=diffDays(cs[i-1].start,cs[i].start);if(x>=18&&x<=60)d.push(x)}
+  const l=d.slice(-6);return l.length?Math.round(l.reduce((a,b)=>a+b,0)/l.length):28}
+function avgLen(){const l=cycles().filter(c=>c.end).map(c=>diffDays(c.start,c.end)+1).filter(x=>x>=1&&x<=14).slice(-6);return l.length?Math.round(l.reduce((a,b)=>a+b,0)/l.length):5}
+function openCycle(){return cycles().find(c=>!c.end&&c.start<=today()&&diffDays(c.start,today())<=14)}
+function nextStart(){const cs=cycles();if(!cs.length)return null;return addDays(cs[cs.length-1].start,avgCycle())}
+function periodStatus(){const t=today(),oc=openCycle();
+  if(oc)return{st:'on',day:diffDays(oc.start,t)+1};
+  const n=nextStart();if(!n)return{st:'none'};const d=diffDays(t,n);return{st:d<0?'late':'wait',days:d,next:n}}
+function qadaOwed(){let n=0;if(isF())for(const c of P().cycles){const e=cycEnd(c);for(let d=c.start;d<=e;d=addDays(d,1))if(hij(d).m===9)n++}return n+((S.ibada.qada&&S.ibada.qada.manual)||0)}
+function qadaLeft(){return Math.max(0,qadaOwed()-((S.ibada.qada&&S.ibada.qada.done)||0))}
+
+function lastStart(){const cs=cycles().filter(c=>c.start<=today());return cs.length?cs[cs.length-1].start:null}
+function irregular(){const cs=cycles(),d=[];for(let i=1;i<cs.length;i++){const x=diffDays(cs[i-1].start,cs[i].start);if(x>=18&&x<=60)d.push(x)}const l=d.slice(-6);return l.length>=2&&Math.max(...l)-Math.min(...l)>7}
+function phaseSegs(L){const pl=Math.min(avgLen(),L-1),ov=L-14,f0=Math.max(pl+1,ov-5),f1=Math.min(L,ov+1);
+  return [{k:'p',n:pl},{k:'f',n:Math.max(0,f0-1-pl)},{k:'o',n:Math.max(0,f1-f0+1)},{k:'l',n:Math.max(0,L-f1)}].filter(x=>x.n>0)}
+function phaseOf(d,L,inPeriod){const pl=avgLen(),ov=L-14;if(inPeriod||d<=pl&&!inPeriod&&false)return'p';
+  if(inPeriod)return'p';if(d>=ov-5&&d<=ov+1)return'o';if(d<ov-5)return'f';return'l'}
+function phaseInfo(t){const ls=lastStart();if(!ls)return null;const L=avgCycle(),d=diffDays(ls,t)+1,inP=isPeriod(t);
+  if(d>L&&!inP)return{k:'late',d,L,name:'الدورة متأخرة',desc:`كان متوقع إنها تيجي من ${nDays(d-L)}. التأخير البسيط عادي ويحصل بسبب التوتر أو التعب. لو التأخير طوّل أو قلقانة، كلّمي دكتورة.`};
+  const k=inP?'p':phaseOf(d,L,false);
+  const T={p:['أيام الدورة','ريّحي نفسك، واشربي مية كتير، والمشروبات الدافية والحركة الخفيفة ممكن تخفف التقلصات.'],
+    f:['مرحلة بعد الدورة','الطاقة غالباً بتبقى أحسن في الأيام دي. احتمال الحمل بيزيد كل ما قرّبنا من أيام الخصوبة.'],
+    o:['أيام الخصوبة','دي أكتر أيام فيها احتمال حمل. التواريخ تقريبية مش مظبوطة 100%.'],
+    l:['مرحلة قبل الدورة الجاية','في آخر الأيام دي ممكن يظهر تعب أو عصبية أو انتفاخ، وده طبيعي.']}[k];
+  return{k,d,L,name:T[0],desc:T[1]}}
+function nextFertile(){let n=nextStart(),ov=addDays(n,-14);while(addDays(ov,1)<today()){n=addDays(n,avgCycle());ov=addDays(n,-14)}return[addDays(ov,-5),addDays(ov,1)]}
+function fertileDay(ds){const ls=lastStart();if(!ls)return false;const L=avgCycle();for(let k=0;k<3;k++){const ov=addDays(ls,L*(k+1)-14);if(ds>=addDays(ov,-5)&&ds<=addDays(ov,1))return true}return false}
+function renderPeriod(){
+  const A=$('perArea');
+  if(P().lock&&hasPin()&&!FK){A.innerHTML=lockHTML('دورتي');bindLock(renderPeriod);return}
+  const t=today(),ps=periodStatus(),L=P().log[t]||{},cs=cycles();
+  let h='';
+  const big=ps.st==='on'?`<small>دلوقتي</small><b>اليوم ${ps.day} من الدورة</b><em>متوسط مدتها عندك ${nDays(avgLen())}</em>`
+    :ps.st==='wait'?`<small>الدورة الجاية تقريباً</small><b>${ps.days===0?'النهارده':ps.days===1?'بكرة':'بعد '+nDays(ps.days)}</b><em>${dname(ps.next,{weekday:'long',day:'numeric',month:'long'})}</em>`
+    :ps.st==='late'?`<small>الدورة اتأخرت</small><b>${nDays(ps.days)} عن المتوقع</b><em>كانت متوقعة ${dname(ps.next,{day:'numeric',month:'long'})}</em>`
+    :`<small>ابدئي من هنا</small><b>سجّلي أول يوم في آخر دورة</b><em>عشان البرنامج يحسب الجاية</em>`;
+  h+=`<div class="card pcard"><div class="pring ${ps.st}">${ps.st==='on'?ps.day:ps.st==='wait'?ps.days:'🌸'}</div><div class="grow">${big}</div></div>`;
+  h+=`<div class="pbtns">${ps.st==='on'?`<button class="primary" data-pact="end">✓ الدورة خلصت النهارده</button>`:`<button class="primary" data-pact="start">🌸 الدورة بدأت النهارده</button>`}
+    <button class="soft" data-open="sh-pdate" style="min-height:46px">يوم تاني؟</button></div>`;
+  if(cs.length>=1){const ph=phaseInfo(t);
+    if(ph){const L=ph.L;
+      h+=`<div class="card phcard ph-${ph.k}" style="flex-direction:column;align-items:stretch;gap:10px">
+        <div class="blkhead"><div><small class="sub">انتي النهارده في</small><b class="phname">${ph.name}</b></div><span class="phday">اليوم ${ph.d}<small> من ${L}</small></span></div>
+        <div class="phbar">${phaseSegs(L).map(sg=>`<i class="s-${sg.k}" style="flex:${sg.n}"></i>`).join('')}<u style="inset-inline-start:calc(${Math.min(ph.d,L)-0.5} / ${L} * 100%)"></u></div>
+        <div class="phlegend"><span><i class="s-p"></i>الدورة</span><span><i class="s-f"></i>بعد الدورة</span><span><i class="s-o"></i>أيام الخصوبة</span><span><i class="s-l"></i>قبل الدورة الجاية</span></div>
+        <div class="phdesc">${ph.desc}</div></div>`;
+      const fw=nextFertile();
+      h+=`<div class="card infogrid"><div><small>طول الدورة عندك</small><b>${nDays(L)}</b></div><div><small>مدة الدورة</small><b>${nDays(avgLen())}</b></div>
+        <div><small>الدورة الجاية</small><b>${dname(nextStart(),{day:'numeric',month:'short'})}</b></div><div><small>أيام الخصوبة الجاية</small><b>${dname(fw[0],{day:'numeric',month:'short'})} – ${dname(fw[1],{day:'numeric',month:'short'})}</b></div></div>`;
+      if(irregular())h+=`<div class="warnbox">⚠️ دوراتك مش منتظمة (الفرق بينها أكتر من أسبوع)، فالتوقعات هتبقى أقل دقة.</div>`;
+    }}
+  h+=`<details class="card explain"><summary><b>إيه معنى المراحل دي؟ وإيه حكاية "فترة الأمان"؟</b><span class="ma">⌄</span></summary>
+    <div class="exbody">
+      <p><i class="s-p"></i><b>الدورة:</b> من أول يوم نزول الدم لحد ما يخلص، وغالباً من 3 لـ 7 أيام.</p>
+      <p><i class="s-f"></i><b>بعد الدورة:</b> الجسم بيجهّز بويضة جديدة. احتمال الحمل في أولها قليل، وبيزيد كل ما قرّبنا من أيام الخصوبة.</p>
+      <p><i class="s-o"></i><b>أيام الخصوبة:</b> حوالي أسبوع حوالين التبويض، والتبويض بيحصل تقريباً قبل الدورة الجاية بـ 14 يوم. دي أكتر أيام فيها احتمال حمل.</p>
+      <p><i class="s-l"></i><b>قبل الدورة الجاية:</b> بعد التبويض لحد الدورة اللي بعدها. في آخر أيامها ممكن يظهر تعب أو عصبية أو انتفاخ (أعراض ما قبل الدورة).</p>
+      <div class="warnbox"><b>"فترة الأمان" مش أمان مضمون.</b> الحساب بالأيام تقريبي، والتبويض ممكن يتقدم أو يتأخر بسبب التوتر أو المرض أو السفر، فممكن يحصل حمل في أيام المفروض إنها بعيدة عن الخصوبة. لو عايزة تمنعي الحمل، استشيري دكتورة في وسيلة مناسبة.</div>
+      <p class="sub">والعكس: لو بتحاولي تحملي، أيام الخصوبة هي أنسب أيام.</p>
+    </div></details>`;
+  h+=calHTML(t);
+  h+=`<div class="sec"><span>النهارده حاسة بإيه؟</span></div><div class="card" style="flex-direction:column;align-items:stretch;gap:10px">
+    <div class="chips">${MOOD.map(([e,n])=>`<button class="chip" data-mood="${n}" aria-pressed="${L.m===n}">${e} ${n}</button>`).join('')}</div>
+    <div class="chips">${SYM.map(s=>`<button class="chip" data-sym="${s}" aria-pressed="${(L.s||[]).includes(s)}">${s}</button>`).join('')}</div></div>`;
+  if(cs.length)h+=`<div class="sec"><span>الدورات اللي فاتت</span></div><ul class="list">${[...cs].reverse().slice(0,8).map(c=>{const e=cycEnd(c),len=diffDays(c.start,e)+1;
+    return `<li><div class="txt"><div class="t">${dname(c.start,{day:'numeric',month:'long'})}${c.end?' – '+dname(c.end,{day:'numeric',month:'long'}):' · لسه شغالة'}</div><div class="when">${nDays(len)}</div></div><button class="del" data-pdel="${c.start}" aria-label="حذف">×</button></li>`}).join('')}</ul>`;
+  h+=`<div class="card setrow"><div class="grow"><b>اقفلي دورتي بالرقم السري</b><div class="sub">${hasPin()?'نفس رقم فضفضة':'اختاري رقم سري من فضفضة الأول'}</div></div><button class="switch" id="pLockSw" role="switch" aria-checked="${!!P().lock}" ${hasPin()?'':'disabled'} aria-label="قفل دورتي"><i></i></button></div>`;
+  A.innerHTML=h;
+  const sw=$('pLockSw');if(sw)sw.onclick=()=>{P().lock=!P().lock;save();renderPeriod();toast(P().lock?'دورتي بقت مقفولة 🔒':'اتشال القفل')};
+}
+function calHTML(t){const d0=new Date(t+'T12:00'),y=d0.getFullYear(),m=d0.getMonth(),first=ymd(new Date(y,m,1)),days=new Date(y,m+1,0).getDate();
+  const lead=(new Date(y,m,1).getDay()+1)%7,n=nextStart(),pl=avgLen(),pred=d=>n&&d>=n&&d<addDays(n,pl)&&!isPeriod(d);
+  let cells='';for(let i=0;i<lead;i++)cells+='<span></span>';
+  for(let i=0;i<days;i++){const ds=addDays(first,i);cells+=`<span class="${isPeriod(ds)?'pd':''} ${pred(ds)?'pp':''} ${!isPeriod(ds)&&!pred(ds)&&fertileDay(ds)?'pf':''} ${ds===t?'pt':''}">${i+1}</span>`}
+  return `<div class="card pcal"><div class="blkhead"><b>${d0.toLocaleDateString('ar-EG',{month:'long',year:'numeric'})}</b><span class="legend"><i class="pd"></i>الدورة <i class="pp"></i>متوقعة <i class="pf"></i>خصوبة</span></div>
+    <div class="pgrid">${['س','ح','ن','ث','ر','خ','ج'].map(x=>`<b>${x}</b>`).join('')}${cells}</div></div>`}
+$('perArea').onclick=e=>{const t=today();
+  const a=e.target.closest('[data-pact]');if(a){const c=P();
+    if(a.dataset.pact==='start'){c.cycles=c.cycles.filter(x=>x.start!==t);c.cycles.push({start:t,end:null});toast('ربنا يقويكي 🌸')}
+    else{const oc=openCycle();if(oc)oc.end=t;toast('الحمد لله على السلامة 🤍')}
+    save();renderPeriod();renderIbada();renderHome();return}
+  const md=e.target.closest('[data-mood]');if(md){const L=P().log[t]=P().log[t]||{};L.m=L.m===md.dataset.mood?undefined:md.dataset.mood;save();renderPeriod();return}
+  const sy=e.target.closest('[data-sym]');if(sy){const L=P().log[t]=P().log[t]||{};L.s=L.s||[];const s=sy.dataset.sym;L.s=L.s.includes(s)?L.s.filter(x=>x!==s):[...L.s,s];save();renderPeriod();return}
+  const dl=e.target.closest('[data-pdel]');if(dl){if(dl.dataset.arm!=='1'){dl.dataset.arm='1';dl.textContent='متأكدة؟';return}
+    P().cycles=P().cycles.filter(x=>x.start!==dl.dataset.pdel);save();renderPeriod();renderIbada()}};
+$('fPdate').onsubmit=e=>{e.preventDefault();const s=$('pdStart').value,en=$('pdEnd').value;if(!s){toast('اختاري يوم البداية');return}
+  if(s>today()){toast('اليوم ده لسه ماجاش');return}if(en&&en<s){toast('يوم النهاية قبل البداية');return}
+  const c=P();c.cycles=c.cycles.filter(x=>x.start!==s);c.cycles.push({start:s,end:en||null});save();closeSheet();renderPeriod();renderIbada();renderHome();toast('اتسجّلت 🌸')};
+
+/* ================= نوافذ الإدخال ================= */
+let curView='home',openSh=null;
+function openSheet(id){closeSheet();openSh=$(id);openSh.hidden=false;$('sheetBg').hidden=false;$('fab').hidden=true;
+  if(id==='sh-exp'&&!$('expDate').value)$('expDate').value=today();
+  if(id==='sh-rem')setAfter(afterMin);
+  const f=openSh.querySelector('input[type=text],textarea,.bigin');setTimeout(()=>{try{(openSh.querySelector('.bigin')||f).focus()}catch(e){}},60)}
+function closeSheet(){if(openSh)openSh.hidden=true;openSh=null;$('sheetBg').hidden=true;updateFab()}
+$('sheetBg').onclick=closeSheet;
+document.addEventListener('click',e=>{if(e.target.closest('[data-close]'))closeSheet();const o=e.target.closest('[data-open]');if(o){if(o.dataset.open==='sh-ibset')fillIbset();if(o.dataset.open==='sh-ics')fillIcs();if(o.dataset.open==='sh-dkrem')fillDkrem();if(o.dataset.open==='sh-name')$('nameIn').value=(S.profile&&S.profile.name)||'';openSheet(o.dataset.open)}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet()});
+const FAB={home:['sh-quick','إضافة'],tasks:['sh-task','مهمة'],habits:['sh-hab','عادة'],money:['sh-exp','مصروف'],rem:['sh-rem','تذكير'],goals:['sh-goal','هدف'],subs:['sh-sub','اشتراك'],notes:['sh-note','ملاحظة']};
+function fabKey(){return curView}
+function updateFab(){const k=fabKey(),f=FAB[k];const show=!!f&&!openSh&&!(k==='tasks'&&view!==today());$('fab').hidden=!show;if(f)$('fabTxt').textContent=f[1]}
+$('fab').onclick=()=>{const f=FAB[fabKey()];if(f)openSheet(f[0])};
+
+/* ================= التبويبات ================= */
+const VIEWS=['home','help','ibada','adhkar','fad','period','tasks','habits','money','rem','goals','subs','notes','settings'];
+function go(v){if((curView==='fad'||curView==='period')&&v!==curView)lockAll();VIEWS.forEach(k=>$('v-'+k).hidden=k!==v);curView=v;closeSheet();if(v==='fad')renderFad();if(v==='help')renderHelp();if(v==='adhkar')renderAdhkar();if(v==='period')renderPeriod();if(v==='home')renderHome();if(v==='tasks'&&view!==today()){view=today();renderTasks()}window.scrollTo(0,0)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(b.dataset.go)});
+
+function setNight(on){document.body.classList.toggle('night',on);$('nightSw').setAttribute('aria-checked',on);try{localStorage.setItem('yawmi-theme',on?'night':'day')}catch(e){}}
+try{setNight(localStorage.getItem('yawmi-theme')==='night')}catch(e){setNight(false)}
+$('nightSw').onclick=()=>setNight(!document.body.classList.contains('night'));
+function sectionItems(){
+  const t=today(),list=tasksFor(t),open=list.filter(x=>!x.isDone),carried=open.filter(x=>x.created<t).length,now=Date.now();
+  const hd=S.habits.filter(h=>(S.hlog[t]||{})[h.id]).length,mt=monthSum(t.slice(0,7));
+  const due=S.rems.filter(r=>!r.done&&new Date(r.at)<=now).length,up=S.rems.filter(r=>!r.done&&new Date(r.at)>now).length;
+  const ns=[...S.subs].sort((a,b)=>a.next.localeCompare(b.next))[0],nd=ns?diffDays(t,ns.next):null;
+  const gAvg=S.goals.length?Math.round(S.goals.reduce((a,g)=>a+Math.min(100,g.cur/g.target*100),0)/S.goals.length):0;
+  const isc=ibadaScore(t),np=nextPrayer();
+  return [
+    ['ibada','🕌','عباداتي',`عملت ${isc.done} من ${isc.tot}`+(np?` · ${np.n} بعد ${untilTxt(np.at)}`:' · اختار مدينتك'),false],
+    ['adhkar','📿','الأذكار',['am','pm','after','sleep'].map(k=>{const p=dkProgress(k);return p.d===p.t?ADHKAR[k].name.replace('أذكار ','')+' ✓':''}).filter(Boolean).join(' · ')||'الصباح والمساء وبعد الصلاة والنوم',false],
+    ['fad','🤍','فضفضة',hasPin()?'🔒 مقفولة بالرقم السري':'مكانك الخاص · اختار رقم سري',false],
+    ...(isF()?[['period','🌸','دورتي',(()=>{const ps=periodStatus();return ps.st==='on'?`اليوم ${ps.day} من الدورة`:ps.st==='wait'?(ps.days===0?'متوقعة النهارده':ps.days===1?'متوقعة بكرة':`الجاية بعد ${nDays(ps.days)} تقريباً`):ps.st==='late'?`متأخرة ${nDays(ps.days)}`:'سجّلي آخر دورة'})(),(()=>{const ps=periodStatus();return ps.st==='wait'&&ps.days<=2})()]]:[]),
+    ['tasks','☑','المهام',list.length?(open.length?`باقي ${open.length}`+(carried?` · ${carried} مرحّلة`:''):'خلّصت كل مهام النهارده ✓'):'مفيش مهام النهارده',carried>0],
+    ['habits','◎','العادات',S.habits.length?`عملت ${hd} من ${S.habits.length} النهارده`:'مفيش عادات لسه',false],
+    ['money','💵','المصاريف',`${money(mt)} ${CUR()} الشهر ده`,S.budget>0&&mt>S.budget],
+    ['rem','⏰','التذكيرات',due?`${due} حان وقته`:up?`${up} جاي`:'مفيش تذكيرات',due>0],
+    ['subs','🔁','الاشتراكات والأقساط',ns?`${ns.name.replace(/^مثال: /,'')} ${nd<0?'متأخر':nd===0?'النهارده':nd===1?'بكرة':'بعد '+nd+' يوم'}`:'مفيش اشتراكات لسه',ns&&nd<=3],
+    ['goals','🎯','الأهداف',S.goals.length?`${S.goals.length} هدف · متوسط ${gAvg}%`:'مفيش أهداف لسه',false],
+    ['notes','✎','الملاحظات',S.notes.length?`${S.notes.length} ملاحظة`:'مفيش ملاحظات لسه',false],
+    ['help','📘','إزاي أستخدم رفيق؟','شرح كل قسم خطوة بخطوة',false],
+    ['settings','⚙','الإعدادات وحفظ البيانات',syncState==='ok'?'بياناتك محفوظة على حسابك ✓':syncState==='local'?'محفوظة على الجهاز ده بس':syncState==='err'?'مش متزامنة دلوقتي':'',syncState==='err']];
+}
+function renderMenu(){const html=sectionItems().map(([v,i,n,st,w])=>`<button data-go="${v}"><span class="mi">${i}</span><span class="mt"><b>${n}</b><small class="${w?'warn':''}">${esc(st)}</small></span><span class="ma">←</span></button>`).join('');
+  $('menu').innerHTML=html;$('menu2').innerHTML=html.replace(/data-go="([a-z]+)"/g,(m,v)=>m+(v===curView?' aria-current="page"':''));}
+function renderHome(){
+  const t=new Date(),td=today(),h=t.getHours();
+  const nm=(S.profile&&S.profile.name)||'';
+  $('hGreet').textContent=(h<12?'صباح الخير':'مساء الخير')+(nm?' يا '+nm:'')+(h<12?' ☀️':h>=18?' 🌙':'');
+  $('nameBtn').hidden=!!nm;const sn=$('setName');if(sn)sn.textContent=nm||'مش مكتوب';
+  $('hDate').textContent=t.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});
+  $('hHijri').textContent=htxt(hij(td));
+  const np=nextPrayer(),isc=ibadaScore(td),ev=events()[0],sp=specials(td).filter(x=>!peek(x[3],td,x[0]));
+  $('homePrayer').innerHTML=`<button class="hpr" data-go="ibada"><span class="mi">🕌</span><span class="mt"><small style="color:var(--muted);font-size:.78rem">${np?(np.tomorrow?'صلاة بكرة':'الصلاة الجاية'):'مواقيت الصلاة'}</small><b>${np?`${np.n} ${tfmt(np.at)} · بعد ${untilTxt(np.at)}`:'اختار مدينتك'}</b>
+    <small style="color:var(--muted);font-size:.78rem">${(()=>{const st=icsState(cityInfo()).st;return st==='soon'||st==='expired'||st==='city'?'<span style="color:var(--amber);font-weight:600">🔔 حدّث تنبيه الصلاة · </span>':''})()}عباداتي ${isc.pct}%${sp.length?' · النهارده: '+esc(sp.slice(0,2).map(x=>x[1]).join('، ')):ev?` · ${ev.n} بعد ${ev.i} يوم`:''}</small></span><span class="ma">←</span></button>`;
+  const list=tasksFor(td),done=list.filter(x=>x.isDone).length,hp=habPct(td),mt=monthSum(td.slice(0,7)),b=S.budget||0;
+  const ns=[...S.subs].sort((a,c)=>a.next.localeCompare(c.next))[0],nd=ns?diffDays(td,ns.next):null;
+  $('report').innerHTML=`
+    <button class="rtile" data-go="tasks"><small>مهام النهارده</small><b>${done} <span>من ${list.length}</span></b><div class="bar"><i style="width:${list.length?done/list.length*100:0}%"></i></div></button>
+    <button class="rtile" data-go="habits"><small>العادات</small><b>${hp}%</b><div class="bar"><i style="width:${hp}%"></i></div></button>
+    <button class="rtile" data-go="money"><small>مصروف الشهر</small><b>${money(mt)} <span>${CUR()}</span></b>${b?`<em class="${mt>b?'bad':''}">${mt>b?'زودت '+money(mt-b)+' عن الميزانية':'فاضل '+money(b-mt)+' من الميزانية'}</em>`:'<em>مفيش ميزانية</em>'}</button>
+    <button class="rtile" data-go="subs"><small>أقرب دفعة</small>${ns?`<b>${money(ns.amt)} <span>${CUR()}</span></b><em class="${nd<=3?'warn':''}">${esc(ns.name.replace(/^مثال: /,''))} · ${nd<0?'متأخر '+(-nd)+' يوم':nd===0?'النهارده':nd===1?'بكرة':'بعد '+nd+' يوم'}</em>`:'<b>—</b><em>مفيش اشتراكات</em>'}</button>`;
+  const open=list.filter(x=>!x.isDone).sort((a,c)=>PRANK[a.p]-PRANK[c.p]),show=open.slice(0,3);
+  $('homeTasks').innerHTML=show.length?show.map(x=>{const pl=PRI.find(p=>p[0]===x.p),c=diffDays(x.created,td);
+    return `<div class="htask"><button class="check" data-ht="${x.id}" aria-label="تم"></button><div class="txt"><div class="t">${esc(x.text)}</div><div class="meta">${x.p?`<span class="tag ${x.p}">${pl[1]}</span>`:''}${c>0?`<span class="tag carry">مرحّلة من ${c===1?'امبارح':c+' أيام'}</span>`:''}</div></div></div>`}).join('')
+    +(open.length>3?`<button class="tiny" data-go="tasks" style="padding:6px 0">و ${open.length-3} مهام كمان ←</button>`:'')
+    :`<div class="sub" style="padding:8px 0">${list.length?'خلّصت كل مهام النهارده ✓ برافو':'مفيش مهام النهارده. اضغط "+ إضافة" تحت.'}</div>`;
+  renderMenu();
+}
+$('homeTasks').onclick=e=>{const b=e.target.closest('[data-ht]');if(!b)return;const x=S.tasks.find(t=>t.id===b.dataset.ht);if(!x)return;
+  x.doneOn=today();save();toast('برافو ✓');renderTasks();renderHome()};
+const CURS=[['SAR','ريال سعودي','ريال'],['EGP','جنيه مصري','جنيه'],['AED','درهم إماراتي','درهم'],['KWD','دينار كويتي','دينار'],['QAR','ريال قطري','ريال'],['BHD','دينار بحريني','دينار'],['OMR','ريال عماني','ريال'],['JOD','دينار أردني','دينار'],['USD','دولار أمريكي','دولار']];
+function CUR(){return (CURS.find(c=>c[0]===S.cur)||CURS[0])[2]}
+function renderCur(){const sel=$('curSel');sel.innerHTML=CURS.map(([c,n])=>`<option value="${c}" ${c===S.cur?'selected':''}>${n}</option>`).join('');document.querySelectorAll('.curName').forEach(e=>e.textContent=CUR())}
+$('curSel').onchange=e=>{S.cur=e.target.value;save();renderAll();toast('العملة بقت '+CUR())};
+function renderAll(){try{$('genSel').value=(S.profile&&S.profile.gender)||''}catch(e){}renderCur();const ex=x=>/^مثال/.test(x.text||x.name||x.note||'');$('exRow').hidden=!['tasks','rems','notes','habits','exps','subs','goals'].some(k=>(S[k]||[]).some(ex));renderTasks();renderHabits();renderMoney();renderRems();renderGoals();renderSubs();renderNotes();renderIbada();if(curView==='period')renderPeriod();renderHome()}
+load();setAfter(1440);renderAll();updateFab();setSync('wait');connect();
+(()=>{let seen=false;try{seen=localStorage.getItem('yawmi-welcome')==='1'}catch(e){}
+  if(!seen)setTimeout(()=>{openSheet('sh-welcome');try{localStorage.setItem('yawmi-welcome','1')}catch(e){}},400)})();
+function setName(v){v=(v||'').trim().slice(0,30);S.profile={...(S.profile||{}),name:v};save();renderHome();return v}
+let wG='';$('wGender').onclick=e=>{const b=e.target.closest('[data-g]');if(!b)return;wG=b.dataset.g;[...$('wGender').children].forEach(x=>x.setAttribute('aria-pressed',x===b))};
+$('welcomeGo').onclick=()=>{try{localStorage.setItem('yawmi-welcome','1')}catch(e){}if(wG)S.profile={...(S.profile||{}),gender:wG};const v=setName($('wName').value);closeSheet();const f=wG==='f';toast(v?(f?'أهلاً بيكي يا ':'أهلاً بيك يا ')+v+' 🤍':(f?'أهلاً بيكي 🤍':'أهلاً بيك 🤍'))};
+$('genSel').onchange=e=>{S.profile={...(S.profile||{}),gender:e.target.value};save();renderAll();toast('اتحفظ ✓')};
+$('fName').onsubmit=e=>{e.preventDefault();const v=setName($('nameIn').value);closeSheet();toast(v?'أهلاً يا '+v:'اتشال الاسم')};
+let lastToday=today();
+function tick(){const t=today();if(view===lastToday)view=t;lastToday=t;renderAll()}
+setInterval(()=>{if(!document.activeElement||!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))tick()},60000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)tick()});
+</script>
+
+<script>
+/* نسخة مستقلة: التثبيت + العمل بدون نت */
+let deferredInstall=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e});
+(function(){const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent),row=document.getElementById('installRow');
+  if(standalone){row.hidden=true;return}
+  document.getElementById('installBtn').onclick=async()=>{
+    if(deferredInstall){deferredInstall.prompt();try{await deferredInstall.userChoice}catch(e){}deferredInstall=null;return}
+    document.getElementById('installTxt').textContent=ios?'اضغط زرار المشاركة تحت في سفاري ⬆️ وبعدين "إضافة إلى الشاشة الرئيسية"':'افتح قائمة المتصفح (⋮) واختار "إضافة إلى الشاشة الرئيسية" أو "تثبيت التطبيق"'}})();
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
